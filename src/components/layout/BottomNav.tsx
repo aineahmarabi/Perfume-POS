@@ -23,11 +23,11 @@ const primaryItems: { label: string; icon: typeof ShoppingCart; path: string; ce
   { label: "Dashboard", icon: TrendingUp, path: "/" },
   { label: "Sales", icon: Receipt, path: "/sales" },
   { label: "POS", icon: ShoppingCart, path: "/pos", center: true },
-  { label: "Customers", icon: Users, path: "/customers" },
+  { label: "Products", icon: Package, path: "/products" },
 ];
 
 const moreItems = [
-  { label: "Products", icon: Package, path: "/products", adminOnly: false },
+  { label: "Customers", icon: Users, path: "/customers", adminOnly: false },
   { label: "Inventory", icon: Boxes, path: "/inventory", adminOnly: false },
   { label: "Purchases", icon: Truck, path: "/purchases", adminOnly: true },
   { label: "Suppliers", icon: Building2, path: "/suppliers", adminOnly: true },

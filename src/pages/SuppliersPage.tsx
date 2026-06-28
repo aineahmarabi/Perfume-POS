@@ -103,9 +103,9 @@ export function SuppliersPage() {
               {suppliers.map((s) => (
                 <TableRow key={s._id}>
                   <TableCell><span className="font-medium">{s.name}</span></TableCell>
-                  <TableCell>{s.contactName ?? "—"}</TableCell>
+                  <TableCell>{s.contactName ?? "-"}</TableCell>
                   <TableCell>{s.phone}</TableCell>
-                  <TableCell>{s.email ?? "—"}</TableCell>
+                  <TableCell>{s.email ?? "-"}</TableCell>
                   <TableCell align="center"><StatusBadge status={s.isActive ? "active" : "inactive"} /></TableCell>
                   <TableCell align="right">
                     <div className="flex items-center justify-end gap-2">
@@ -143,4 +143,3 @@ export function SuppliersPage() {
     </AdminLayout>
   );
 }
-

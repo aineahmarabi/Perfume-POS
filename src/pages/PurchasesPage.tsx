@@ -49,7 +49,7 @@ export function PurchasesPage() {
   const supplierOptions = (suppliers ?? []).map((s) => ({ value: s._id, label: s.name }));
   const variantOptions = (stockOverview ?? []).filter((v) => v.isActive && !v.isTester).map((v) => ({
     value: v._id,
-    label: `${v.productName} ${v.sizeMl}ml — ${v.sku}`,
+    label: `${v.productName} ${v.sizeMl}ml - ${v.sku}`,
   }));
 
   const addPOItem = () => {
@@ -220,7 +220,7 @@ export function PurchasesPage() {
                 <div key={i} className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-sm font-medium">{item.productName}</p>
-                    <p className="text-sm text-[#9B9B9B]">{item.sku} · Ordered: {item.quantity}</p>
+                    <p className="text-sm text-[#9B9B9B]">{item.sku} - Ordered: {item.quantity}</p>
                   </div>
                   <Input
                     type="number"
@@ -244,4 +244,3 @@ export function PurchasesPage() {
     </AdminLayout>
   );
 }
-
