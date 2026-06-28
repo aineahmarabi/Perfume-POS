@@ -14,7 +14,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       <Sidebar />
 
       {/* Main content */}
-      <main className="flex-1 min-h-screen md:ml-60 pb-28 md:pb-0">
+      <main className="flex-1 min-h-screen md:ml-60 pb-28 md:pb-0 min-w-0 overflow-x-hidden">
         <div className="p-4 md:p-6 max-w-[1400px]">
           {title && (
             <div className="flex items-center justify-between mb-4 md:mb-6">

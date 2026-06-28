@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { AdminLayout } from "../components/layout/AdminLayout";
-import { Tabs, TabList, Tab, TabPanel } from "../components/ui/Tabs";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
 import { SearchInput } from "../components/ui/SearchInput";
 import { Modal } from "../components/ui/Modal";
@@ -75,31 +74,53 @@ export function InventoryPage() {
     }
   };
 
+  const [activeTab, setActiveTab] = useState("stock");
+
   return (
     <AdminLayout title="Inventory">
-      <Tabs defaultTab="stock">
-        <TabList className="mb-4">
-          <Tab value="stock">Stock Overview</Tab>
-          <Tab value="low">
-            Low Stock
-            {(lowStock?.length ?? 0) > 0 && (
-              <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-sm bg-amber-100 text-amber-700">
-                {lowStock?.length}
-              </span>
-            )}
-          </Tab>
-          <Tab value="expiry">
-            Expiry Alerts
-            {(expiryAlerts?.length ?? 0) > 0 && (
-              <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-sm bg-red-100 text-red-700">
-                {expiryAlerts?.length}
-              </span>
-            )}
-          </Tab>
-        </TabList>
+      <div className="tab-scroll-container w-full mb-4">
+        <div style={{ display: "flex", minWidth: "max-content", borderBottom: "1px solid #E0E0E0" }}>
+          {[
+            { key: "stock", label: "Stock Overview", badge: null },
+            { key: "low", label: "Low Stock", badge: lowStock?.length ?? 0, badgeColor: { bg: "#FEF3C7", color: "#B45309" } },
+            { key: "expiry", label: "Expiry Alerts", badge: expiryAlerts?.length ?? 0, badgeColor: { bg: "#FEE2E2", color: "#DC2626" } },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              style={{
+                padding: "10px 16px",
+                fontSize: "14px",
+                fontWeight: activeTab === tab.key ? 600 : 400,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                background: "none",
+                border: "none",
+                borderBottom: activeTab === tab.key ? "2px solid #6B1A2A" : "2px solid transparent",
+                cursor: "pointer",
+                color: activeTab === tab.key ? "#6B1A2A" : "#6B6B6B",
+                marginBottom: "-1px",
+                outline: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                transition: "color 150ms",
+              }}
+            >
+              {tab.label}
+              {tab.badge !== null && tab.badge > 0 && (
+                <span style={{ fontSize: "12px", padding: "1px 6px", borderRadius: "9999px", background: tab.badgeColor?.bg, color: tab.badgeColor?.color }}>
+                  {tab.badge}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
 
-        {/* ── STOCK OVERVIEW ── */}
-        <TabPanel value="stock">
+      {/* ── STOCK OVERVIEW ── */}
+      {activeTab === "stock" && (
+        <>
           <div className="mb-3">
             <SearchInput
               placeholder="Search by product, brand, or SKU..."
@@ -188,10 +209,12 @@ export function InventoryPage() {
               </div>
             </>
           )}
-        </TabPanel>
+        </>
+      )}
 
-        {/* ── LOW STOCK ── */}
-        <TabPanel value="low">
+      {/* ── LOW STOCK ── */}
+      {activeTab === "low" && (
+        <>
           {!lowStock ? (
             <SkeletonTable rows={5} cols={4} />
           ) : lowStock.length === 0 ? (
@@ -263,10 +286,12 @@ export function InventoryPage() {
               </div>
             </>
           )}
-        </TabPanel>
+        </>
+      )}
 
-        {/* ── EXPIRY ALERTS ── */}
-        <TabPanel value="expiry">
+      {/* ── EXPIRY ALERTS ── */}
+      {activeTab === "expiry" && (
+        <>
           {!expiryAlerts ? (
             <SkeletonTable rows={5} cols={4} />
           ) : expiryAlerts.length === 0 ? (
@@ -346,8 +371,8 @@ export function InventoryPage() {
               </div>
             </>
           )}
-        </TabPanel>
-      </Tabs>
+        </>
+      )}
 
       {/* Adjust Stock Modal */}
       <Modal

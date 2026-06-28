@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AdminLayout } from "../components/layout/AdminLayout";
-import { Tabs, TabList, Tab, TabPanel } from "../components/ui/Tabs";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { StatCard } from "../components/ui/StatCard";
@@ -25,24 +24,51 @@ function useDateRange() {
   return { startDate, setStartDate, endDate, setEndDate, startTs, endTs };
 }
 
+const REPORTS_TABS = [
+  { key: "sales", label: "Sales" },
+  { key: "products", label: "Products" },
+  { key: "profit", label: "Profit & Loss" },
+  { key: "payments", label: "Payments" },
+  { key: "staff", label: "Staff" },
+];
+
 export function ReportsPage() {
+  const [activeTab, setActiveTab] = useState("sales");
+
   return (
     <AdminLayout title="Reports">
-      <Tabs defaultTab="sales">
-        <TabList className="mb-6">
-          <Tab value="sales">Sales</Tab>
-          <Tab value="products">Products</Tab>
-          <Tab value="profit">Profit & Loss</Tab>
-          <Tab value="payments">Payments</Tab>
-          <Tab value="staff">Staff</Tab>
-        </TabList>
-
-        <TabPanel value="sales"><SalesReport /></TabPanel>
-        <TabPanel value="products"><ProductReport /></TabPanel>
-        <TabPanel value="profit"><ProfitReport /></TabPanel>
-        <TabPanel value="payments"><PaymentReport /></TabPanel>
-        <TabPanel value="staff"><StaffReport /></TabPanel>
-      </Tabs>
+      <div className="tab-scroll-container w-full mb-6">
+        <div style={{ display: "flex", minWidth: "max-content", borderBottom: "1px solid #E0E0E0" }}>
+          {REPORTS_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              style={{
+                padding: "10px 16px",
+                fontSize: "14px",
+                fontWeight: activeTab === tab.key ? 600 : 400,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                background: "none",
+                border: "none",
+                borderBottom: activeTab === tab.key ? "2px solid #6B1A2A" : "2px solid transparent",
+                cursor: "pointer",
+                color: activeTab === tab.key ? "#6B1A2A" : "#6B6B6B",
+                marginBottom: "-1px",
+                outline: "none",
+                transition: "color 150ms",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {activeTab === "sales" && <SalesReport />}
+      {activeTab === "products" && <ProductReport />}
+      {activeTab === "profit" && <ProfitReport />}
+      {activeTab === "payments" && <PaymentReport />}
+      {activeTab === "staff" && <StaffReport />}
     </AdminLayout>
   );
 }

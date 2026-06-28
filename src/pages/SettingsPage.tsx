@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { AdminLayout } from "../components/layout/AdminLayout";
-import { Tabs, TabList, Tab, TabPanel } from "../components/ui/Tabs";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
@@ -14,23 +13,51 @@ import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
 
+const SETTINGS_TABS = [
+  { key: "general", label: "General" },
+  { key: "receipt", label: "Receipt" },
+  { key: "payments", label: "Payments" },
+  { key: "catalogue", label: "Brands & Categories" },
+  { key: "users", label: "Users" },
+];
+
 export function SettingsPage() {
+  const [activeTab, setActiveTab] = useState("general");
+
   return (
     <AdminLayout title="Settings">
-      <Tabs defaultTab="general">
-        <TabList className="mb-6">
-          <Tab value="general">General</Tab>
-          <Tab value="receipt">Receipt</Tab>
-          <Tab value="payments">Payments</Tab>
-          <Tab value="catalogue">Brands & Categories</Tab>
-          <Tab value="users">Users</Tab>
-        </TabList>
-        <TabPanel value="general"><GeneralSettings /></TabPanel>
-        <TabPanel value="receipt"><ReceiptSettings /></TabPanel>
-        <TabPanel value="payments"><PaymentSettings /></TabPanel>
-        <TabPanel value="catalogue"><CatalogueSettings /></TabPanel>
-        <TabPanel value="users"><UserManagement /></TabPanel>
-      </Tabs>
+      <div className="tab-scroll-container w-full mb-6">
+        <div style={{ display: "flex", minWidth: "max-content", borderBottom: "1px solid #E0E0E0" }}>
+          {SETTINGS_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              style={{
+                padding: "10px 16px",
+                fontSize: "14px",
+                fontWeight: activeTab === tab.key ? 600 : 400,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+                background: "none",
+                border: "none",
+                borderBottom: activeTab === tab.key ? "2px solid #6B1A2A" : "2px solid transparent",
+                cursor: "pointer",
+                color: activeTab === tab.key ? "#6B1A2A" : "#6B6B6B",
+                marginBottom: "-1px",
+                outline: "none",
+                transition: "color 150ms",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {activeTab === "general" && <GeneralSettings />}
+      {activeTab === "receipt" && <ReceiptSettings />}
+      {activeTab === "payments" && <PaymentSettings />}
+      {activeTab === "catalogue" && <CatalogueSettings />}
+      {activeTab === "users" && <UserManagement />}
     </AdminLayout>
   );
 }
