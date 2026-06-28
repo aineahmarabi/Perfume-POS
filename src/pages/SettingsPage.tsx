@@ -11,6 +11,7 @@ import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from ".
 import { StatusBadge } from "../components/ui/Badge";
 import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "../hooks/useAuth";
 import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
 
 const SETTINGS_TABS = [
@@ -242,6 +243,7 @@ function UserManagement() {
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { user: currentUser } = useAuth();
   const users = useQuery(api.users.list);
   const createUser = useMutation(api.users.create);
   const toggleActive = useMutation(api.users.toggleActive);
@@ -307,56 +309,67 @@ function UserManagement() {
             </tr>
           </TableHead>
           <TableBody>
-            {users.map((u) => (
-              <TableRow key={u._id}>
-                <TableCell><span className="font-medium">{u.name}</span></TableCell>
-                <TableCell>{u.email}</TableCell>
-                <TableCell align="center"><span className="capitalize">{u.role}</span></TableCell>
-                <TableCell align="center"><StatusBadge status={u.isActive ? "active" : "inactive"} /></TableCell>
-                <TableCell align="center">
-                  <div className="flex items-center justify-center gap-3">
-                    <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="text-sm text-[#2563EB] hover:underline flex items-center gap-1">
-                      <RefreshCw size={11} /> Reset PIN
-                    </button>
-                    <button
-                      onClick={() => toggleActive({ id: u._id as Id<"users">, isActive: !u.isActive })}
-                      className={`text-sm hover:underline ${u.isActive ? "text-[#DC2626]" : "text-[#16A34A]"}`}
-                    >
-                      {u.isActive ? "Deactivate" : "Activate"}
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {users.map((u) => {
+              const isSelf = currentUser?._id === u._id;
+              return (
+                <TableRow key={u._id}>
+                  <TableCell><span className="font-medium">{u.name}</span></TableCell>
+                  <TableCell>{u.email}</TableCell>
+                  <TableCell align="center"><span className="capitalize">{u.role}</span></TableCell>
+                  <TableCell align="center"><StatusBadge status={u.isActive ? "active" : "inactive"} /></TableCell>
+                  <TableCell align="center">
+                    <div className="flex items-center justify-center gap-3">
+                      <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="text-sm text-[#2563EB] hover:underline flex items-center gap-1">
+                        <RefreshCw size={11} /> Reset PIN
+                      </button>
+                      {!isSelf && (
+                        <button
+                          onClick={() => toggleActive({ id: u._id as Id<"users">, isActive: !u.isActive, requestedBy: currentUser?._id as Id<"users"> })}
+                          className={`text-sm hover:underline ${u.isActive ? "text-[#DC2626]" : "text-[#16A34A]"}`}
+                        >
+                          {u.isActive ? "Deactivate" : "Activate"}
+                        </button>
+                      )}
+                      {isSelf && <span className="text-xs text-[#9B9B9B]">You</span>}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
 
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
-        {users.map((u) => (
-          <div key={u._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="font-medium text-sm">{u.name}</p>
-                <p className="text-xs text-[#9B9B9B] mt-0.5">{u.email}</p>
-                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{u.role}</p>
+        {users.map((u) => {
+          const isSelf = currentUser?._id === u._id;
+          return (
+            <div key={u._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium text-sm">{u.name}{isSelf && <span className="ml-1.5 text-xs text-[#9B9B9B]">(You)</span>}</p>
+                  <p className="text-xs text-[#9B9B9B] mt-0.5">{u.email}</p>
+                  <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{u.role}</p>
+                </div>
+                <StatusBadge status={u.isActive ? "active" : "inactive"} />
               </div>
-              <StatusBadge status={u.isActive ? "active" : "inactive"} />
+              <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md flex items-center justify-center gap-1">
+                  <RefreshCw size={12} /> Reset PIN
+                </button>
+                {!isSelf && (
+                  <button
+                    onClick={() => toggleActive({ id: u._id as Id<"users">, isActive: !u.isActive, requestedBy: currentUser?._id as Id<"users"> })}
+                    className={`flex-1 text-sm py-1.5 border border-[#E0E0E0] rounded-md ${u.isActive ? "text-[#DC2626]" : "text-[#16A34A]"}`}
+                  >
+                    {u.isActive ? "Deactivate" : "Activate"}
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
-              <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md flex items-center justify-center gap-1">
-                <RefreshCw size={12} /> Reset PIN
-              </button>
-              <button
-                onClick={() => toggleActive({ id: u._id as Id<"users">, isActive: !u.isActive })}
-                className={`flex-1 text-sm py-1.5 border border-[#E0E0E0] rounded-md ${u.isActive ? "text-[#DC2626]" : "text-[#16A34A]"}`}
-              >
-                {u.isActive ? "Deactivate" : "Activate"}
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add Staff Member" maxWidth="sm">

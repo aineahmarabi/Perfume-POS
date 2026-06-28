@@ -64,8 +64,11 @@ export const resetPin = mutation({
 });
 
 export const toggleActive = mutation({
-  args: { id: v.id("users"), isActive: v.boolean() },
+  args: { id: v.id("users"), isActive: v.boolean(), requestedBy: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
+    if (args.requestedBy && args.requestedBy === args.id) {
+      throw new Error("You cannot deactivate your own account");
+    }
     await ctx.db.patch(args.id, { isActive: args.isActive, updatedAt: Date.now() });
   },
 });
