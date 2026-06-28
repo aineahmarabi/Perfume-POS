@@ -193,25 +193,23 @@ export function POSPage() {
           />
         </div>
 
-        {/* Mobile sticky cart bar — always visible on products tab, above bottom nav */}
+        {/* Mobile floating cart button */}
         {mobileTab === "products" && (
-          <div className="md:hidden fixed bottom-16 inset-x-0 bg-white border-t border-[#E0E0E0] px-4 py-3 z-30 shadow-lg">
-            <button
-              onClick={() => setMobileTab("cart")}
-              className="w-full flex items-center justify-between"
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#6B1A2A]">
-                <ShoppingCart size={16} />
-                {cart.isEmpty ? "Cart" : `${cart.items.reduce((s, i) => s + i.quantity, 0)} items`}
-              </span>
-              {!cart.isEmpty && (
-                <span className="text-base font-semibold font-mono text-[#6B1A2A]">
-                  {formatCurrency(cart.totals.grandTotal)}
-                </span>
-              )}
-              <span className="text-sm font-semibold text-[#6B1A2A]">View Cart →</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileTab("cart")}
+            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#6B1A2A] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
+          >
+            <ShoppingCart size={16} />
+            {cart.items.length > 0 ? (
+              <>
+                <span>{cart.items.reduce((s, i) => s + i.quantity, 0)} item{cart.items.reduce((s, i) => s + i.quantity, 0) !== 1 ? "s" : ""}</span>
+                <span className="opacity-70">·</span>
+                <span className="font-mono">{formatCurrency(cart.totals.grandTotal)}</span>
+              </>
+            ) : (
+              <span>Cart</span>
+            )}
+          </button>
         )}
       </div>
 
