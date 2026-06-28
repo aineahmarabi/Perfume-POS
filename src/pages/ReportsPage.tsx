@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AdminLayout } from "../components/layout/AdminLayout";
@@ -7,7 +7,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { StatCard } from "../components/ui/StatCard";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable, SkeletonCard } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { formatCurrency, formatCurrencyShort } from "../lib/utils";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from "recharts";
@@ -76,7 +76,13 @@ function SalesReport() {
   const { startDate, setStartDate, endDate, setEndDate, startTs, endTs } = useDateRange();
   const data = useQuery(api.reports.getSalesReport, { startDate: startTs, endDate: endTs });
 
-  if (!data) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!data) return (
+    <div>
+      <DateRangeFilter startDate={startDate} endDate={endDate} onStartChange={setStartDate} onEndChange={setEndDate} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">{Array.from({length:4}).map((_,i)=><SkeletonCard key={i}/>)}</div>
+      <SkeletonTable rows={6} cols={4} />
+    </div>
+  );
 
   return (
     <div>
@@ -121,7 +127,15 @@ function ProductReport() {
   const { startDate, setStartDate, endDate, setEndDate, startTs, endTs } = useDateRange();
   const data = useQuery(api.reports.getProductReport, { startDate: startTs, endDate: endTs });
 
-  if (!data) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!data) return (
+    <div>
+      <DateRangeFilter startDate={startDate} endDate={endDate} onStartChange={setStartDate} onEndChange={setEndDate} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SkeletonTable rows={6} cols={2} />
+        <SkeletonTable rows={6} cols={2} />
+      </div>
+    </div>
+  );
 
   return (
     <div>
@@ -168,7 +182,13 @@ function ProfitReport() {
   const { startDate, setStartDate, endDate, setEndDate, startTs, endTs } = useDateRange();
   const data = useQuery(api.reports.getProfitReport, { startDate: startTs, endDate: endTs });
 
-  if (!data) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!data) return (
+    <div>
+      <DateRangeFilter startDate={startDate} endDate={endDate} onStartChange={setStartDate} onEndChange={setEndDate} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">{Array.from({length:3}).map((_,i)=><SkeletonCard key={i}/>)}</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><SkeletonTable rows={5} cols={2}/><SkeletonTable rows={5} cols={2}/></div>
+    </div>
+  );
 
   return (
     <div>
@@ -210,7 +230,12 @@ function PaymentReport() {
   const { startDate, setStartDate, endDate, setEndDate, startTs, endTs } = useDateRange();
   const data = useQuery(api.reports.getSalesReport, { startDate: startTs, endDate: endTs });
 
-  if (!data) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!data) return (
+    <div>
+      <DateRangeFilter startDate={startDate} endDate={endDate} onStartChange={setStartDate} onEndChange={setEndDate} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><SkeletonTable rows={5} cols={2}/><SkeletonTable rows={5} cols={2}/></div>
+    </div>
+  );
 
   const breakdown = { cash: 0, mpesa: 0, card: 0, split: 0 };
   for (const s of data.sales) {
@@ -259,7 +284,12 @@ function StaffReport() {
   const { startDate, setStartDate, endDate, setEndDate, startTs, endTs } = useDateRange();
   const data = useQuery(api.reports.getStaffReport, { startDate: startTs, endDate: endTs });
 
-  if (!data) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!data) return (
+    <div>
+      <DateRangeFilter startDate={startDate} endDate={endDate} onStartChange={setStartDate} onEndChange={setEndDate} />
+      <SkeletonTable rows={5} cols={4} />
+    </div>
+  );
 
   return (
     <div>

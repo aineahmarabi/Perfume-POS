@@ -10,9 +10,9 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
 import { StatusBadge } from "../components/ui/Badge";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
 
 export function SettingsPage() {
   return (
@@ -22,11 +22,13 @@ export function SettingsPage() {
           <Tab value="general">General</Tab>
           <Tab value="receipt">Receipt</Tab>
           <Tab value="payments">Payments</Tab>
-          <Tab value="users">User Management</Tab>
+          <Tab value="catalogue">Brands & Categories</Tab>
+          <Tab value="users">Users</Tab>
         </TabList>
         <TabPanel value="general"><GeneralSettings /></TabPanel>
         <TabPanel value="receipt"><ReceiptSettings /></TabPanel>
         <TabPanel value="payments"><PaymentSettings /></TabPanel>
+        <TabPanel value="catalogue"><CatalogueSettings /></TabPanel>
         <TabPanel value="users"><UserManagement /></TabPanel>
       </Tabs>
     </AdminLayout>
@@ -64,7 +66,7 @@ function GeneralSettings() {
     }
   };
 
-  if (!settings) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!settings) return <SkeletonForm fields={6} />;
 
   return (
     <div className="max-w-lg space-y-4">
@@ -111,7 +113,7 @@ function ReceiptSettings() {
     }
   };
 
-  if (!settings) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!settings) return <SkeletonForm fields={2} />;
 
   return (
     <div className="max-w-lg space-y-4">
@@ -157,7 +159,7 @@ function PaymentSettings() {
     }
   };
 
-  if (!settings) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!settings) return <SkeletonForm fields={5} />;
 
   return (
     <div className="max-w-lg space-y-4">
@@ -231,7 +233,7 @@ function UserManagement() {
     }
   };
 
-  if (!users) return <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>;
+  if (!users) return <SkeletonTable rows={4} cols={5} />;
 
   return (
     <div>
@@ -299,6 +301,120 @@ function UserManagement() {
           </div>
         </div>
       </Modal>
+    </div>
+  );
+}
+
+function CatalogueSettings() {
+  const brands = useQuery(api.brands.list, { activeOnly: false });
+  const categories = useQuery(api.categories.list, { activeOnly: false });
+  const createBrand = useMutation(api.brands.create);
+  const updateBrand = useMutation(api.brands.update);
+  const createCategory = useMutation(api.categories.create);
+  const updateCategory = useMutation(api.categories.update);
+
+  const [newBrand, setNewBrand] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [addingBrand, setAddingBrand] = useState(false);
+  const [addingCategory, setAddingCategory] = useState(false);
+
+  const handleAddBrand = async () => {
+    if (!newBrand.trim()) return;
+    setAddingBrand(true);
+    try { await createBrand({ name: newBrand.trim() }); setNewBrand(""); toast.success("Brand added"); }
+    catch { toast.error("Failed to add brand"); }
+    finally { setAddingBrand(false); }
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) return;
+    setAddingCategory(true);
+    try { await createCategory({ name: newCategory.trim() }); setNewCategory(""); toast.success("Category added"); }
+    catch { toast.error("Failed to add category"); }
+    finally { setAddingCategory(false); }
+  };
+
+  const toggleBrand = async (b: NonNullable<typeof brands>[0]) => {
+    await updateBrand({ id: b._id as Id<"brands">, name: b.name, isActive: !b.isActive });
+    toast.success(b.isActive ? "Brand deactivated" : "Brand activated");
+  };
+
+  const toggleCategory = async (c: NonNullable<typeof categories>[0]) => {
+    await updateCategory({ id: c._id as Id<"categories">, name: c.name, isActive: !c.isActive });
+    toast.success(c.isActive ? "Category deactivated" : "Category activated");
+  };
+
+  if (!brands || !categories) return <SkeletonTable rows={5} cols={3} />;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Brands */}
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wider text-[#6B6B6B] mb-3">Brands</p>
+        <div className="flex gap-2 mb-3">
+          <input
+            value={newBrand}
+            onChange={(e) => setNewBrand(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAddBrand()}
+            placeholder="New brand name..."
+            className="input-base flex-1"
+          />
+          <Button onClick={handleAddBrand} loading={addingBrand} disabled={!newBrand.trim()}>
+            <Plus size={14} /> Add
+          </Button>
+        </div>
+        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+          {brands.length === 0 ? (
+            <p className="text-sm text-[#9B9B9B] p-4">No brands yet.</p>
+          ) : (
+            brands.map((b) => (
+              <div key={b._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
+                <span className={`text-sm font-medium ${b.isActive ? "text-[#6B1A2A]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
+                <button
+                  onClick={() => toggleBrand(b)}
+                  className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${b.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
+                >
+                  {b.isActive ? <><Trash2 size={12} /> Delete</> : "Restore"}
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wider text-[#6B6B6B] mb-3">Categories</p>
+        <div className="flex gap-2 mb-3">
+          <input
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAddCategory()}
+            placeholder="New category name..."
+            className="input-base flex-1"
+          />
+          <Button onClick={handleAddCategory} loading={addingCategory} disabled={!newCategory.trim()}>
+            <Plus size={14} /> Add
+          </Button>
+        </div>
+        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+          {categories.length === 0 ? (
+            <p className="text-sm text-[#9B9B9B] p-4">No categories yet.</p>
+          ) : (
+            categories.map((c) => (
+              <div key={c._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
+                <span className={`text-sm font-medium ${c.isActive ? "text-[#6B1A2A]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
+                <button
+                  onClick={() => toggleCategory(c)}
+                  className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${c.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
+                >
+                  {c.isActive ? <><Trash2 size={12} /> Delete</> : "Restore"}
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }

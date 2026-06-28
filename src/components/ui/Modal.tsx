@@ -42,19 +42,20 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = "md", class
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div
         className={cn(
-          "relative bg-white rounded-md shadow-sm border border-[#E0E0E0] w-full p-6",
+          "relative bg-white rounded-md shadow-sm border border-[#E0E0E0] w-full my-4 flex flex-col",
+          "max-h-[calc(100vh-2rem)]",
           maxWidths[maxWidth],
           className
         )}
       >
         {title && (
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#E0E0E0] flex-shrink-0">
             <h2 className="text-sm font-semibold text-[#6B1A2A]">{title}</h2>
             <button
               onClick={onClose}
@@ -67,12 +68,14 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = "md", class
         {!title && (
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 h-8 w-8 rounded-md flex items-center justify-center hover:bg-[#F0F0F0] transition-colors"
+            className="absolute right-4 top-4 h-8 w-8 rounded-md flex items-center justify-center hover:bg-[#F0F0F0] transition-colors z-10"
           >
             <X size={16} />
           </button>
         )}
-        {children}
+        <div className="overflow-y-auto flex-1 p-6">
+          {children}
+        </div>
       </div>
     </div>
   );

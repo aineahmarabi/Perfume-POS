@@ -12,9 +12,10 @@ import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from ".
 import { SearchInput } from "../components/ui/SearchInput";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { formatCurrency, generateSkuCode } from "../lib/utils";
 import { Plus, Edit, Trash2, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { ImageUpload } from "../components/ui/ImageUpload";
+import { SkeletonTable } from "../components/ui/Skeleton";
 
 interface VariantForm {
   id?: string;
@@ -273,7 +274,7 @@ export function ProductsPage() {
       </div>
 
       {!products ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={6} />
       ) : filtered.length === 0 ? (
         <EmptyState message="No products found." action={{ label: "Add Product", onClick: openAdd }} />
       ) : (
@@ -432,7 +433,11 @@ export function ProductsPage() {
               )}
             </div>
 
-            <Input label="Image URL (optional)" value={productForm.imageUrl} onChange={(e) => setProductForm({ ...productForm, imageUrl: e.target.value })} placeholder="https://..." />
+            <ImageUpload
+              label="Product Image (optional)"
+              value={productForm.imageUrl}
+              onChange={(url) => setProductForm({ ...productForm, imageUrl: url })}
+            />
           </div>
           <Input label="Description (optional)" value={productForm.description} onChange={(e) => setProductForm({ ...productForm, description: e.target.value })} placeholder="Fragrance description..." />
 

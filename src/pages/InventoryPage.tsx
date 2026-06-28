@@ -12,11 +12,11 @@ import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
 import { StockBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { formatCurrency, formatDate } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
 import { STOCK_ADJUSTMENT_REASONS } from "../lib/constants";
 import { AlertTriangle, Clock } from "lucide-react";
+import { SkeletonTable } from "../components/ui/Skeleton";
 
 export function InventoryPage() {
   const { user } = useAuth();
@@ -97,11 +97,11 @@ export function InventoryPage() {
               placeholder="Search by product, brand, or SKU..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-72"
+              className="w-full sm:w-72"
             />
           </div>
           {!stockOverview ? (
-            <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+            <SkeletonTable rows={7} cols={5} />
           ) : (
             <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
               <Table>
@@ -151,7 +151,7 @@ export function InventoryPage() {
 
         <TabPanel value="low">
           {!lowStock ? (
-            <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+            <SkeletonTable rows={5} cols={4} />
           ) : lowStock.length === 0 ? (
             <EmptyState message="All stock levels are healthy." icon={<AlertTriangle size={32} strokeWidth={1.5} />} />
           ) : (
@@ -192,7 +192,7 @@ export function InventoryPage() {
 
         <TabPanel value="expiry">
           {!expiryAlerts ? (
-            <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+            <SkeletonTable rows={5} cols={4} />
           ) : expiryAlerts.length === 0 ? (
             <EmptyState message="No expiry alerts within 90 days." icon={<Clock size={32} strokeWidth={1.5} />} />
           ) : (

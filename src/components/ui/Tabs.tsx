@@ -33,8 +33,10 @@ export function Tabs({ defaultTab, children, className, onChange }: TabsProps) {
 
 export function TabList({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("flex border-b border-[#E0E0E0]", className)}>
-      {children}
+    <div className={cn("overflow-x-auto no-scrollbar border-b border-[#E0E0E0]", className)}>
+      <div className="flex min-w-max">
+        {children}
+      </div>
     </div>
   );
 }

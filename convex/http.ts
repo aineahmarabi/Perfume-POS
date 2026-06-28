@@ -59,4 +59,18 @@ http.route({
   }),
 });
 
+// Serve uploaded images from Convex storage
+http.route({
+  path: "/getImage",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const url = new URL(request.url);
+    const storageId = url.searchParams.get("storageId");
+    if (!storageId) return new Response("Missing storageId", { status: 400 });
+    const blob = await ctx.storage.get(storageId);
+    if (!blob) return new Response("Not found", { status: 404 });
+    return new Response(blob);
+  }),
+});
+
 export default http;
