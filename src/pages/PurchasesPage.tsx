@@ -231,8 +231,8 @@ export function PurchasesPage() {
             </div>
             <div className="space-y-2 max-h-60 overflow-y-auto">
               {poItems.map((item, i) => (
-                <div key={i} className="grid grid-cols-4 gap-2 items-end">
-                  <div className="col-span-2">
+                <div key={i} className="border border-[#E0E0E0] rounded-md p-3 space-y-2 sm:space-y-0 sm:grid sm:grid-cols-4 sm:gap-2 sm:items-end sm:border-0 sm:rounded-none sm:p-0">
+                  <div className="sm:col-span-2">
                     <Select label="Product" options={variantOptions} value={item.variantId} onChange={(e) => updatePOItem(i, "variantId", e.target.value)} placeholder="Select product" />
                   </div>
                   <Input label="Qty" type="number" min="1" value={item.quantity} onChange={(e) => updatePOItem(i, "quantity", parseInt(e.target.value) || 1)} />

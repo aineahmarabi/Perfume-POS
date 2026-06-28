@@ -186,26 +186,27 @@ export function SalesPage() {
       <Modal isOpen={!!selectedSale && !voidId} onClose={() => setSelectedSale(null)} title="Sale Detail" maxWidth="lg">
         {saleDetail && (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div>
-                <p className="text-sm text-[#6B6B6B]">Sale Number</p>
+                <p className="text-xs text-[#6B6B6B]">Sale Number</p>
                 <p className="font-mono font-medium">{saleDetail.saleNumber}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6B6B6B]">Date & Time</p>
+                <p className="text-xs text-[#6B6B6B]">Date & Time</p>
                 <p>{formatDateTime(saleDetail.createdAt)}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6B6B6B]">Cashier</p>
+                <p className="text-xs text-[#6B6B6B]">Cashier</p>
                 <p>{saleDetail.cashierName}</p>
               </div>
               <div>
-                <p className="text-sm text-[#6B6B6B]">Customer</p>
+                <p className="text-xs text-[#6B6B6B]">Customer</p>
                 <p>{saleDetail.customerName}</p>
               </div>
             </div>
 
-            <div className="border border-[#E0E0E0] rounded-md overflow-hidden">
+            {/* Desktop items table */}
+            <div className="hidden sm:block border border-[#E0E0E0] rounded-md overflow-hidden">
               <Table>
                 <TableHead>
                   <tr>
@@ -229,6 +230,19 @@ export function SalesPage() {
                   ))}
                 </TableBody>
               </Table>
+            </div>
+            {/* Mobile items cards */}
+            <div className="sm:hidden space-y-2">
+              {saleDetail.items.map((item, i) => (
+                <div key={i} className="border border-[#E0E0E0] rounded-md p-3">
+                  <p className="font-medium text-sm">{item.productName} {item.brandName} {item.sizeMl}ml</p>
+                  <p className="text-xs text-[#9B9B9B] mb-2">{item.sku}</p>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#9B9B9B]">Qty: {item.quantity} × {formatCurrency(item.unitPrice)}</span>
+                    <span className="font-mono font-semibold">{formatCurrency(item.lineTotal)}</span>
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="bg-[#F7F7F7] rounded-md p-3 space-y-1 text-sm">

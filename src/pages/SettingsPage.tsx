@@ -69,19 +69,25 @@ function GeneralSettings() {
   if (!settings) return <SkeletonForm fields={6} />;
 
   return (
-    <div className="max-w-lg space-y-4">
-      <Input label="Shop Name" value={form.shop_name} onChange={(e) => setForm({ ...form, shop_name: e.target.value })} />
-      <Input label="Shop Phone" value={form.shop_phone} onChange={(e) => setForm({ ...form, shop_phone: e.target.value })} type="tel" />
-      <Input label="Shop Address" value={form.shop_address} onChange={(e) => setForm({ ...form, shop_address: e.target.value })} />
-      <Input label="Tax Rate (e.g. 0.16 for 16%)" value={form.tax_rate} onChange={(e) => setForm({ ...form, tax_rate: e.target.value })} type="number" step="0.01" min="0" max="1" />
-      <Select
-        label="Tax Inclusive (prices include VAT)"
-        options={[{ value: "true", label: "Yes — prices include VAT" }, { value: "false", label: "No — VAT added on top" }]}
-        value={form.tax_inclusive}
-        onChange={(e) => setForm({ ...form, tax_inclusive: e.target.value })}
-      />
-      <Input label="Default Low Stock Threshold" value={form.low_stock_default} onChange={(e) => setForm({ ...form, low_stock_default: e.target.value })} type="number" min="1" />
-      <Button onClick={handleSave} loading={loading}>Save Settings</Button>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-4">
+        <Input label="Shop Name" value={form.shop_name} onChange={(e) => setForm({ ...form, shop_name: e.target.value })} />
+        <Input label="Shop Phone" value={form.shop_phone} onChange={(e) => setForm({ ...form, shop_phone: e.target.value })} type="tel" />
+        <Input label="Shop Address" value={form.shop_address} onChange={(e) => setForm({ ...form, shop_address: e.target.value })} />
+      </div>
+      <div className="space-y-4">
+        <Input label="Tax Rate (e.g. 0.16 for 16%)" value={form.tax_rate} onChange={(e) => setForm({ ...form, tax_rate: e.target.value })} type="number" step="0.01" min="0" max="1" />
+        <Select
+          label="Tax Inclusive (prices include VAT)"
+          options={[{ value: "true", label: "Yes — prices include VAT" }, { value: "false", label: "No — VAT added on top" }]}
+          value={form.tax_inclusive}
+          onChange={(e) => setForm({ ...form, tax_inclusive: e.target.value })}
+        />
+        <Input label="Default Low Stock Threshold" value={form.low_stock_default} onChange={(e) => setForm({ ...form, low_stock_default: e.target.value })} type="number" min="1" />
+      </div>
+      <div className="md:col-span-2">
+        <Button onClick={handleSave} loading={loading}>Save Settings</Button>
+      </div>
     </div>
   );
 }
@@ -116,15 +122,31 @@ function ReceiptSettings() {
   if (!settings) return <SkeletonForm fields={2} />;
 
   return (
-    <div className="max-w-lg space-y-4">
-      <Input label="Receipt Footer Message" value={form.receipt_footer} onChange={(e) => setForm({ ...form, receipt_footer: e.target.value })} />
-      <Select
-        label="Show Logo on Receipt"
-        options={[{ value: "true", label: "Yes" }, { value: "false", label: "No" }]}
-        value={form.receipt_show_logo}
-        onChange={(e) => setForm({ ...form, receipt_show_logo: e.target.value })}
-      />
-      <Button onClick={handleSave} loading={loading}>Save Receipt Settings</Button>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-4">
+        <Input label="Receipt Footer Message" value={form.receipt_footer} onChange={(e) => setForm({ ...form, receipt_footer: e.target.value })} />
+        <Select
+          label="Show Logo on Receipt"
+          options={[{ value: "true", label: "Yes" }, { value: "false", label: "No" }]}
+          value={form.receipt_show_logo}
+          onChange={(e) => setForm({ ...form, receipt_show_logo: e.target.value })}
+        />
+        <Button onClick={handleSave} loading={loading}>Save Receipt Settings</Button>
+      </div>
+      <div className="hidden md:block bg-[#F7F7F7] border border-[#E0E0E0] rounded-md p-4">
+        <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B] mb-3">Receipt Preview</p>
+        <div className="font-mono text-xs text-[#6B6B6B] space-y-1 leading-relaxed">
+          <p className="font-semibold text-center text-[#6B1A2A]">RECEIPT</p>
+          <p className="text-center">— — — — — — — — —</p>
+          <p>Item 1 x2 .......... KSh 800</p>
+          <p>Item 2 x1 .......... KSh 450</p>
+          <p className="text-center">— — — — — — — — —</p>
+          <p className="font-semibold">Total ............. KSh 1,250</p>
+          <p>VAT (16%) ........... KSh 172</p>
+          <p className="text-center">— — — — — — — — —</p>
+          <p className="text-center text-[#9B9B9B] text-xs mt-2">{form.receipt_footer || "Thank you for shopping with us!"}</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -162,20 +184,24 @@ function PaymentSettings() {
   if (!settings) return <SkeletonForm fields={5} />;
 
   return (
-    <div className="max-w-lg space-y-4">
+    <div className="space-y-4">
       <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-700">
         M-Pesa credentials are stored securely and used only for STK push requests.
       </div>
-      <Select
-        label="Environment"
-        options={[{ value: "sandbox", label: "Sandbox (Testing)" }, { value: "production", label: "Production (Live)" }]}
-        value={form.mpesa_environment}
-        onChange={(e) => setForm({ ...form, mpesa_environment: e.target.value })}
-      />
-      <Input label="Business Short Code" value={form.mpesa_shortcode} onChange={(e) => setForm({ ...form, mpesa_shortcode: e.target.value })} placeholder="174379" />
-      <Input label="Passkey" value={form.mpesa_passkey} onChange={(e) => setForm({ ...form, mpesa_passkey: e.target.value })} type="password" />
-      <Input label="Consumer Key" value={form.mpesa_consumer_key} onChange={(e) => setForm({ ...form, mpesa_consumer_key: e.target.value })} />
-      <Input label="Consumer Secret" value={form.mpesa_consumer_secret} onChange={(e) => setForm({ ...form, mpesa_consumer_secret: e.target.value })} type="password" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Select
+          label="Environment"
+          options={[{ value: "sandbox", label: "Sandbox (Testing)" }, { value: "production", label: "Production (Live)" }]}
+          value={form.mpesa_environment}
+          onChange={(e) => setForm({ ...form, mpesa_environment: e.target.value })}
+        />
+        <Input label="Business Short Code" value={form.mpesa_shortcode} onChange={(e) => setForm({ ...form, mpesa_shortcode: e.target.value })} placeholder="174379" />
+        <Input label="Consumer Key" value={form.mpesa_consumer_key} onChange={(e) => setForm({ ...form, mpesa_consumer_key: e.target.value })} />
+        <Input label="Consumer Secret" value={form.mpesa_consumer_secret} onChange={(e) => setForm({ ...form, mpesa_consumer_secret: e.target.value })} type="password" />
+        <div className="md:col-span-2">
+          <Input label="Passkey" value={form.mpesa_passkey} onChange={(e) => setForm({ ...form, mpesa_passkey: e.target.value })} type="password" />
+        </div>
+      </div>
       <Button onClick={handleSave} loading={loading}>Save Payment Settings</Button>
     </div>
   );

@@ -267,15 +267,17 @@ function PaymentReport() {
             ))}
           </div>
         </div>
-        <div className="bg-white border border-[#E0E0E0] rounded-md p-4 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" label={false} labelLine={false} fontSize={11}>
-                {chartData.map((_, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
-              </Pie>
-              <Tooltip formatter={(v) => formatCurrency(Number(v))} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="bg-white border border-[#E0E0E0] rounded-md p-4">
+          <div className="w-full" style={{ height: 200 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" label={false} labelLine={false} fontSize={11}>
+                  {chartData.map((_, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+                </Pie>
+                <Tooltip formatter={(v) => formatCurrency(Number(v))} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
