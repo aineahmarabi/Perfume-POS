@@ -1,0 +1,148 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #6B1A2A;
+    background: #FFFFFF;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    min-height: 100vh;
+    background: #FFFFFF;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#6B1A2A] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#2a2a2a] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-[#E0E0E0] text-[#6B1A2A] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply bg-[#DC2626] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#b91c1c] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-[#6B6B6B] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F0F0F0] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-icon {
+    @apply h-9 w-9 rounded-md flex items-center justify-center hover:bg-[#F0F0F0] transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-base {
+    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#6B1A2A] focus:ring-1 focus:ring-[#6B1A2A] outline-none transition-all duration-150 w-full text-[#6B1A2A] placeholder:text-[#9B9B9B];
+  }
+
+  .table-header {
+    @apply bg-[#F0F0F0] text-sm font-medium uppercase tracking-wider text-[#6B6B6B] h-10;
+  }
+
+  .table-row {
+    @apply h-12 border-b border-[#E0E0E0] hover:bg-[#F7F7F7] text-sm transition-colors duration-100;
+  }
+
+  .table-cell {
+    @apply px-4 py-2 align-middle;
+  }
+
+  .card {
+    @apply bg-white border border-[#E0E0E0] rounded-md p-4;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-green-50 text-green-700 border border-green-200;
+  }
+
+  .badge-warning {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200;
+  }
+
+  .badge-danger {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-red-50 text-red-700 border border-red-200;
+  }
+
+  .badge-info {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-blue-50 text-blue-700 border border-blue-200;
+  }
+
+  .badge-default {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-sm font-medium bg-[#F0F0F0] text-[#6B6B6B] border border-[#E0E0E0];
+  }
+
+  .section-label {
+    @apply text-sm font-medium uppercase tracking-wider text-[#6B6B6B];
+  }
+}
+
+/* Print styles for receipts */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-printable,
+  .receipt-printable * {
+    visibility: visible;
+  }
+
+  .receipt-printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #000;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F7F7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E0E0E0;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9B9B9B;
+}
