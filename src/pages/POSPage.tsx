@@ -99,11 +99,10 @@ export function POSPage() {
   };
 
   useKeyboardShortcuts({
-    "F1": () => searchRef.current?.focus(),
+    "F1": () => { setMobileTab("products"); setTimeout(() => searchRef.current?.focus(), 50); },
     "F5": handleHold,
-    "F8": () => !cart.isEmpty && setShowPayment(false),
     "F9": () => cart.clearCart(),
-    "F12": () => !cart.isEmpty && setShowPayment(true),
+    "F12": () => { if (!cart.isEmpty) { setMobileTab("cart"); setShowPayment(true); } },
     "Escape": () => { setShowPayment(false); setShowReceipt(false); setShowHeldSales(false); },
   });
 
@@ -172,7 +171,7 @@ export function POSPage() {
       <div className="flex flex-1 overflow-hidden relative">
         {/* Product area — full width on mobile, 60% on desktop */}
         <div className={`overflow-hidden transition-all ${mobileTab === "cart" ? "hidden md:flex md:flex-1" : "flex-1"}`}>
-          <ProductGrid onAddItem={(item) => { cart.addItem(item); }} />
+          <ProductGrid onAddItem={(item) => { cart.addItem(item); }} searchRef={searchRef} />
         </div>
 
         {/* Cart panel — full screen on mobile when active, 40% on desktop */}

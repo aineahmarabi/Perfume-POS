@@ -1,4 +1,5 @@
-﻿import { useState } from "react";
+﻿import { useState, useRef } from "react";
+import type React from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -11,13 +12,16 @@ import { Package } from "lucide-react";
 
 interface ProductGridProps {
   onAddItem: (item: Omit<CartItem, "quantity" | "discount" | "lineTotal">) => void;
+  searchRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-export function ProductGrid({ onAddItem }: ProductGridProps) {
+export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedBrand, setSelectedBrand] = useState<string>("all");
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
+  const internalRef = useRef<HTMLInputElement>(null);
+  const resolvedRef = searchRef ?? internalRef;
 
   const debouncedSearch = useDebounce(search, 200);
 
@@ -90,6 +94,7 @@ export function ProductGrid({ onAddItem }: ProductGridProps) {
       {/* Filters */}
       <div className="p-3 border-b border-[#E0E0E0] space-y-2 flex-shrink-0">
         <SearchInput
+          ref={resolvedRef}
           placeholder="Search by name, brand, or SKU... (F1)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
