@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { AdminLayout } from "../components/layout/AdminLayout";
@@ -9,7 +9,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { Badge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable } from "../components/ui/Skeleton";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { formatCurrency, formatDate } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
@@ -82,7 +82,7 @@ export function ExpensesPage() {
       </div>
 
       {!expenses ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={5} />
       ) : expenses.length === 0 ? (
         <EmptyState message="No expenses recorded." icon={<DollarSign size={32} strokeWidth={1.5} />} action={{ label: "Add Expense", onClick: () => setShowModal(true) }} />
       ) : (
@@ -146,3 +146,4 @@ export function ExpensesPage() {
     </AdminLayout>
   );
 }
+

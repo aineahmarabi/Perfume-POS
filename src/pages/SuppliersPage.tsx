@@ -1,4 +1,4 @@
-ï»¿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -9,7 +9,7 @@ import { Input } from "../components/ui/Input";
 import { Modal } from "../components/ui/Modal";
 import { StatusBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable } from "../components/ui/Skeleton";
 import { Plus, Building2, Edit } from "lucide-react";
 
 interface SupplierForm {
@@ -83,7 +83,7 @@ export function SuppliersPage() {
       </div>
 
       {!suppliers ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={5} />
       ) : suppliers.length === 0 ? (
         <EmptyState message="No suppliers yet." icon={<Building2 size={32} strokeWidth={1.5} />} action={{ label: "Add Supplier", onClick: openAdd }} />
       ) : (
@@ -103,9 +103,9 @@ export function SuppliersPage() {
               {suppliers.map((s) => (
                 <TableRow key={s._id}>
                   <TableCell><span className="font-medium">{s.name}</span></TableCell>
-                  <TableCell>{s.contactName ?? "â€”"}</TableCell>
+                  <TableCell>{s.contactName ?? "—"}</TableCell>
                   <TableCell>{s.phone}</TableCell>
-                  <TableCell>{s.email ?? "â€”"}</TableCell>
+                  <TableCell>{s.email ?? "—"}</TableCell>
                   <TableCell align="center"><StatusBadge status={s.isActive ? "active" : "inactive"} /></TableCell>
                   <TableCell align="right">
                     <div className="flex items-center justify-end gap-2">
@@ -143,3 +143,4 @@ export function SuppliersPage() {
     </AdminLayout>
   );
 }
+

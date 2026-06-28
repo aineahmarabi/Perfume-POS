@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -9,7 +9,7 @@ import { Modal } from "../components/ui/Modal";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable } from "../components/ui/Skeleton";
 import { formatCurrency, formatDate } from "../lib/utils";
 import { useDebounce } from "../hooks/useDebounce";
 import { Plus, Users } from "lucide-react";
@@ -90,7 +90,7 @@ export function CustomersPage() {
       </div>
 
       {!allCustomers ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={5} />
       ) : displayCustomers.length === 0 ? (
         <EmptyState message="No customers found." icon={<Users size={32} strokeWidth={1.5} />} action={{ label: "Add Customer", onClick: openAdd }} />
       ) : (
@@ -180,3 +180,4 @@ export function CustomersPage() {
     </AdminLayout>
   );
 }
+

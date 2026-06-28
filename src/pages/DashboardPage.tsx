@@ -4,7 +4,7 @@ import { AdminLayout } from "../components/layout/AdminLayout";
 import { StatCard } from "../components/ui/StatCard";
 import { formatCurrency, formatCurrencyShort, formatDateTime } from "../lib/utils";
 import { StatusBadge, StockBadge } from "../components/ui/Badge";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonCard, Skeleton } from "../components/ui/Skeleton";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { DollarSign, ShoppingCart, Package, TrendingUp } from "lucide-react";
 
@@ -16,7 +16,32 @@ export function DashboardPage() {
   if (!stats) {
     return (
       <AdminLayout title="Dashboard">
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        {/* KPI skeleton */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+        {/* Charts skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="md:col-span-2 bg-white border border-[#E0E0E0] rounded-md p-4">
+            <Skeleton className="h-3 w-40 mb-4" />
+            <Skeleton className="h-48 w-full" />
+          </div>
+          <div className="bg-white border border-[#E0E0E0] rounded-md p-4 space-y-3">
+            <Skeleton className="h-3 w-32 mb-2" />
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-6 w-full" />)}
+          </div>
+        </div>
+        {/* Bottom row skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white border border-[#E0E0E0] rounded-md p-4 space-y-3">
+            <Skeleton className="h-3 w-28 mb-2" />
+            {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+          </div>
+          <div className="bg-white border border-[#E0E0E0] rounded-md p-4 space-y-3">
+            <Skeleton className="h-3 w-28 mb-2" />
+            {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+          </div>
+        </div>
       </AdminLayout>
     );
   }

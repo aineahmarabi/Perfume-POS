@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -11,7 +11,7 @@ import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { Badge, StatusBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable } from "../components/ui/Skeleton";
 
 import { formatCurrency, formatDateTime } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
@@ -90,7 +90,7 @@ export function SalesPage() {
       </div>
 
       {!salesQuery ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={5} />
       ) : filtered.length === 0 ? (
         <EmptyState message="No sales found." icon={<Receipt size={32} strokeWidth={1.5} />} />
       ) : (
@@ -223,3 +223,4 @@ export function SalesPage() {
     </AdminLayout>
   );
 }
+

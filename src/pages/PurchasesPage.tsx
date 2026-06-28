@@ -1,4 +1,4 @@
-ï»¿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -10,7 +10,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { StatusBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
+import { SkeletonTable } from "../components/ui/Skeleton";
 import { formatCurrency, formatDate } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
 import { Plus, Truck } from "lucide-react";
@@ -49,7 +49,7 @@ export function PurchasesPage() {
   const supplierOptions = (suppliers ?? []).map((s) => ({ value: s._id, label: s.name }));
   const variantOptions = (stockOverview ?? []).filter((v) => v.isActive && !v.isTester).map((v) => ({
     value: v._id,
-    label: `${v.productName} ${v.sizeMl}ml â€” ${v.sku}`,
+    label: `${v.productName} ${v.sizeMl}ml — ${v.sku}`,
   }));
 
   const addPOItem = () => {
@@ -133,7 +133,7 @@ export function PurchasesPage() {
       </div>
 
       {!orders ? (
-        <div className="flex justify-center py-20"><LoadingSpinner size="lg" /></div>
+        <SkeletonTable rows={6} cols={5} />
       ) : orders.length === 0 ? (
         <EmptyState message="No purchase orders yet." icon={<Truck size={32} strokeWidth={1.5} />} action={{ label: "Create PO", onClick: () => setShowNew(true) }} />
       ) : (
@@ -220,7 +220,7 @@ export function PurchasesPage() {
                 <div key={i} className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-sm font-medium">{item.productName}</p>
-                    <p className="text-sm text-[#9B9B9B]">{item.sku} Â· Ordered: {item.quantity}</p>
+                    <p className="text-sm text-[#9B9B9B]">{item.sku} · Ordered: {item.quantity}</p>
                   </div>
                   <Input
                     type="number"
@@ -244,3 +244,4 @@ export function PurchasesPage() {
     </AdminLayout>
   );
 }
+
