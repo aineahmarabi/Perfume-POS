@@ -9,7 +9,7 @@ import { ProductGrid } from "../components/pos/ProductGrid";
 import { CartPanel } from "../components/pos/CartPanel";
 import { PaymentModal } from "../components/pos/PaymentModal";
 import { ReceiptModal } from "../components/pos/ReceiptModal";
-import { formatDateTime } from "../lib/utils";
+import { formatDateTime, formatCurrency } from "../lib/utils";
 import { Lock, LayoutGrid, PauseCircle, Clock, ShoppingCart, LayoutDashboard } from "lucide-react";
 import { BottomNav } from "../components/layout/BottomNav";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -193,23 +193,25 @@ export function POSPage() {
           />
         </div>
 
-        {/* Mobile floating cart button — only on products tab, above bottom nav */}
+        {/* Mobile sticky cart bar — always visible on products tab, above bottom nav */}
         {mobileTab === "products" && (
-          <button
-            onClick={() => setMobileTab("cart")}
-            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#6B1A2A] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
-          >
-            <ShoppingCart size={16} />
-            {cart.items.length > 0 ? (
-              <>
-                <span>{cart.items.length} item{cart.items.length !== 1 ? "s" : ""}</span>
-                <span className="opacity-70">·</span>
-                <span className="font-mono">{new Intl.NumberFormat("en-KE", { style: "currency", currency: "KES", minimumFractionDigits: 0 }).format(cart.totals.grandTotal)}</span>
-              </>
-            ) : (
-              <span>Cart</span>
-            )}
-          </button>
+          <div className="md:hidden fixed bottom-16 inset-x-0 bg-white border-t border-[#E0E0E0] px-4 py-3 z-30 shadow-lg">
+            <button
+              onClick={() => setMobileTab("cart")}
+              className="w-full flex items-center justify-between"
+            >
+              <span className="flex items-center gap-2 text-sm font-semibold text-[#6B1A2A]">
+                <ShoppingCart size={16} />
+                {cart.isEmpty ? "Cart" : `${cart.items.reduce((s, i) => s + i.quantity, 0)} items`}
+              </span>
+              {!cart.isEmpty && (
+                <span className="text-base font-semibold font-mono text-[#6B1A2A]">
+                  {formatCurrency(cart.totals.grandTotal)}
+                </span>
+              )}
+              <span className="text-sm font-semibold text-[#6B1A2A]">View Cart →</span>
+            </button>
+          </div>
         )}
       </div>
 

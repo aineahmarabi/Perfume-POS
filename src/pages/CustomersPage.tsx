@@ -84,9 +84,9 @@ export function CustomersPage() {
 
   return (
     <AdminLayout title="Customers">
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <SearchInput placeholder="Search by name or phone..." value={search} onChange={(e) => setSearch(e.target.value)} className="flex-1 min-w-0" />
-        <Button onClick={openAdd}><Plus size={16} /> Add Customer</Button>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+        <SearchInput placeholder="Search by name or phone..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:flex-1" />
+        <Button onClick={openAdd} className="w-full sm:w-auto"><Plus size={16} /> Add Customer</Button>
       </div>
 
       {!allCustomers ? (
@@ -94,34 +94,67 @@ export function CustomersPage() {
       ) : displayCustomers.length === 0 ? (
         <EmptyState message="No customers found." icon={<Users size={32} strokeWidth={1.5} />} action={{ label: "Add Customer", onClick: openAdd }} />
       ) : (
-        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
-          <Table>
-            <TableHead>
-              <tr>
-                <TableHeader>Name</TableHeader>
-                <TableHeader>Phone</TableHeader>
-                <TableHeader align="right">Total Spent</TableHeader>
-                <TableHeader align="center">Visits</TableHeader>
-                <TableHeader align="center">Loyalty Pts</TableHeader>
-                <TableHeader align="right">Actions</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {displayCustomers.map((c) => (
-                <TableRow key={c._id} onClick={() => setProfileId(c._id)}>
-                  <TableCell><span className="font-medium">{c.name}</span></TableCell>
-                  <TableCell>{c.phone}</TableCell>
-                  <TableCell align="right"><span className="font-mono">{formatCurrency(c.totalSpent)}</span></TableCell>
-                  <TableCell align="center">{c.visitCount}</TableCell>
-                  <TableCell align="center">{c.loyaltyPoints}</TableCell>
-                  <TableCell align="right">
-                    <button onClick={(e) => { e.stopPropagation(); openEdit(c); }} className="text-sm text-[#2563EB] hover:underline">Edit</button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+            <Table>
+              <TableHead>
+                <tr>
+                  <TableHeader>Name</TableHeader>
+                  <TableHeader>Phone</TableHeader>
+                  <TableHeader align="right">Total Spent</TableHeader>
+                  <TableHeader align="center">Visits</TableHeader>
+                  <TableHeader align="center">Loyalty Pts</TableHeader>
+                  <TableHeader align="right">Actions</TableHeader>
+                </tr>
+              </TableHead>
+              <TableBody>
+                {displayCustomers.map((c) => (
+                  <TableRow key={c._id} onClick={() => setProfileId(c._id)}>
+                    <TableCell><span className="font-medium">{c.name}</span></TableCell>
+                    <TableCell>{c.phone}</TableCell>
+                    <TableCell align="right"><span className="font-mono">{formatCurrency(c.totalSpent)}</span></TableCell>
+                    <TableCell align="center">{c.visitCount}</TableCell>
+                    <TableCell align="center">{c.loyaltyPoints}</TableCell>
+                    <TableCell align="right">
+                      <button onClick={(e) => { e.stopPropagation(); openEdit(c); }} className="text-sm text-[#2563EB] hover:underline">Edit</button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {displayCustomers.map((c) => (
+              <div key={c._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+                <div>
+                  <p className="font-medium text-sm">{c.name}</p>
+                  <p className="text-xs text-[#9B9B9B] mt-0.5">{c.phone}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F0F0F0] text-center text-xs">
+                  <div>
+                    <p className="text-[#9B9B9B]">Spent</p>
+                    <p className="font-mono font-semibold text-sm">{formatCurrency(c.totalSpent)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#9B9B9B]">Visits</p>
+                    <p className="font-semibold text-sm">{c.visitCount}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#9B9B9B]">Points</p>
+                    <p className="font-semibold text-sm">{c.loyaltyPoints}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                  <button onClick={() => openEdit(c)} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md">Edit</button>
+                  <button onClick={() => setProfileId(c._id)} className="flex-1 text-sm text-[#6B6B6B] py-1.5 border border-[#E0E0E0] rounded-md">View Profile</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Add/Edit Modal */}

@@ -79,7 +79,7 @@ export function SuppliersPage() {
   return (
     <AdminLayout title="Suppliers">
       <div className="flex justify-end mb-4">
-        <Button onClick={openAdd}><Plus size={16} /> Add Supplier</Button>
+        <Button onClick={openAdd} className="w-full sm:w-auto"><Plus size={16} /> Add Supplier</Button>
       </div>
 
       {!suppliers ? (
@@ -87,43 +87,71 @@ export function SuppliersPage() {
       ) : suppliers.length === 0 ? (
         <EmptyState message="No suppliers yet." icon={<Building2 size={32} strokeWidth={1.5} />} action={{ label: "Add Supplier", onClick: openAdd }} />
       ) : (
-        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
-          <Table>
-            <TableHead>
-              <tr>
-                <TableHeader>Name</TableHeader>
-                <TableHeader>Contact</TableHeader>
-                <TableHeader>Phone</TableHeader>
-                <TableHeader>Email</TableHeader>
-                <TableHeader align="center">Status</TableHeader>
-                <TableHeader align="right">Actions</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {suppliers.map((s) => (
-                <TableRow key={s._id}>
-                  <TableCell><span className="font-medium">{s.name}</span></TableCell>
-                  <TableCell>{s.contactName ?? "-"}</TableCell>
-                  <TableCell>{s.phone}</TableCell>
-                  <TableCell>{s.email ?? "-"}</TableCell>
-                  <TableCell align="center"><StatusBadge status={s.isActive ? "active" : "inactive"} /></TableCell>
-                  <TableCell align="right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => openEdit(s)} className="text-sm text-[#2563EB] hover:underline flex items-center gap-1">
-                        <Edit size={12} /> Edit
-                      </button>
-                      {s.isActive && (
-                        <button onClick={() => removeSupplier({ id: s._id as Id<"suppliers"> })} className="text-sm text-[#DC2626] hover:underline">
-                          Deactivate
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+            <Table>
+              <TableHead>
+                <tr>
+                  <TableHeader>Name</TableHeader>
+                  <TableHeader>Contact</TableHeader>
+                  <TableHeader>Phone</TableHeader>
+                  <TableHeader>Email</TableHeader>
+                  <TableHeader align="center">Status</TableHeader>
+                  <TableHeader align="right">Actions</TableHeader>
+                </tr>
+              </TableHead>
+              <TableBody>
+                {suppliers.map((s) => (
+                  <TableRow key={s._id}>
+                    <TableCell><span className="font-medium">{s.name}</span></TableCell>
+                    <TableCell>{s.contactName ?? "-"}</TableCell>
+                    <TableCell>{s.phone}</TableCell>
+                    <TableCell>{s.email ?? "-"}</TableCell>
+                    <TableCell align="center"><StatusBadge status={s.isActive ? "active" : "inactive"} /></TableCell>
+                    <TableCell align="right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => openEdit(s)} className="text-sm text-[#2563EB] hover:underline flex items-center gap-1">
+                          <Edit size={12} /> Edit
                         </button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                        {s.isActive && (
+                          <button onClick={() => removeSupplier({ id: s._id as Id<"suppliers"> })} className="text-sm text-[#DC2626] hover:underline">
+                            Deactivate
+                          </button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {suppliers.map((s) => (
+              <div key={s._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm">{s.name}</p>
+                    <p className="text-xs text-[#9B9B9B] mt-0.5">{[s.contactName, s.phone].filter(Boolean).join(" · ")}</p>
+                    {s.email && <p className="text-xs text-[#9B9B9B]">{s.email}</p>}
+                    {s.address && <p className="text-xs text-[#9B9B9B]">{s.address}</p>}
+                  </div>
+                  <StatusBadge status={s.isActive ? "active" : "inactive"} />
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                  <button onClick={() => openEdit(s)} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md">Edit</button>
+                  {s.isActive && (
+                    <button onClick={() => removeSupplier({ id: s._id as Id<"suppliers"> })} className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md">
+                      Deactivate
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingId ? "Edit Supplier" : "Add Supplier"} maxWidth="sm">

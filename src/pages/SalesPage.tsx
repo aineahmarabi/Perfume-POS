@@ -70,23 +70,28 @@ export function SalesPage() {
 
   return (
     <AdminLayout title="Sales History">
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      {/* Filters — stacked on mobile, row on desktop */}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 mb-4">
         <SearchInput placeholder="Search by sale number..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:w-48" />
-        <Select
-          options={[{ value: "", label: "All Statuses" }, { value: "completed", label: "Completed" }, { value: "voided", label: "Voided" }, { value: "on_hold", label: "On Hold" }]}
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="flex-1 sm:w-36 sm:flex-none"
-        />
-        <Select
-          options={[{ value: "", label: "All Methods" }, { value: "cash", label: "Cash" }, { value: "mpesa", label: "M-Pesa" }, { value: "card", label: "Card" }, { value: "split", label: "Split" }]}
-          value={filterMethod}
-          onChange={(e) => setFilterMethod(e.target.value)}
-          className="flex-1 sm:w-32 sm:flex-none"
-        />
-        <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
-        <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
-        <span className="text-sm text-[#9B9B9B] w-full sm:w-auto">{filtered.length} results</span>
+        <div className="flex gap-2">
+          <Select
+            options={[{ value: "", label: "All Statuses" }, { value: "completed", label: "Completed" }, { value: "voided", label: "Voided" }, { value: "on_hold", label: "On Hold" }]}
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="flex-1 sm:w-36 sm:flex-none"
+          />
+          <Select
+            options={[{ value: "", label: "All Methods" }, { value: "cash", label: "Cash" }, { value: "mpesa", label: "M-Pesa" }, { value: "card", label: "Card" }, { value: "split", label: "Split" }]}
+            value={filterMethod}
+            onChange={(e) => setFilterMethod(e.target.value)}
+            className="flex-1 sm:w-32 sm:flex-none"
+          />
+        </div>
+        <div className="flex gap-2">
+          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
+          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
+        </div>
+        <span className="text-sm text-[#9B9B9B]">{filtered.length} results</span>
       </div>
 
       {!salesQuery ? (
@@ -94,45 +99,87 @@ export function SalesPage() {
       ) : filtered.length === 0 ? (
         <EmptyState message="No sales found." icon={<Receipt size={32} strokeWidth={1.5} />} />
       ) : (
-        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
-          <Table>
-            <TableHead>
-              <tr>
-                <TableHeader>Sale #</TableHeader>
-                <TableHeader>Date / Time</TableHeader>
-                <TableHeader>Items</TableHeader>
-                <TableHeader>Payment</TableHeader>
-                <TableHeader align="right">Total</TableHeader>
-                <TableHeader align="center">Status</TableHeader>
-                <TableHeader align="center">Actions</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {filtered.map((sale) => (
-                <TableRow key={sale._id} onClick={() => setSelectedSale(sale._id)}>
-                  <TableCell><span className="font-mono text-sm">{sale.saleNumber}</span></TableCell>
-                  <TableCell>{formatDateTime(sale.createdAt)}</TableCell>
-                  <TableCell>
-                    <Badge variant="default">{sale.items.reduce((s, i) => s + i.quantity, 0)} items</Badge>
-                  </TableCell>
-                  <TableCell><span className="capitalize">{methodLabel[sale.paymentMethod] ?? sale.paymentMethod}</span></TableCell>
-                  <TableCell align="right"><span className="font-mono font-semibold">{formatCurrency(sale.grandTotal)}</span></TableCell>
-                  <TableCell align="center"><StatusBadge status={sale.status} /></TableCell>
-                  <TableCell align="center">
-                    {isAdmin && sale.status === "completed" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}
-                        className="text-sm text-[#DC2626] hover:underline"
-                      >
-                        Void
-                      </button>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+            <Table>
+              <TableHead>
+                <tr>
+                  <TableHeader>Sale #</TableHeader>
+                  <TableHeader>Date / Time</TableHeader>
+                  <TableHeader>Items</TableHeader>
+                  <TableHeader>Payment</TableHeader>
+                  <TableHeader align="right">Total</TableHeader>
+                  <TableHeader align="center">Status</TableHeader>
+                  <TableHeader align="center">Actions</TableHeader>
+                </tr>
+              </TableHead>
+              <TableBody>
+                {filtered.map((sale) => (
+                  <TableRow key={sale._id} onClick={() => setSelectedSale(sale._id)}>
+                    <TableCell><span className="font-mono text-sm">{sale.saleNumber}</span></TableCell>
+                    <TableCell>{formatDateTime(sale.createdAt)}</TableCell>
+                    <TableCell>
+                      <Badge variant="default">{sale.items.reduce((s, i) => s + i.quantity, 0)} items</Badge>
+                    </TableCell>
+                    <TableCell><span className="capitalize">{methodLabel[sale.paymentMethod] ?? sale.paymentMethod}</span></TableCell>
+                    <TableCell align="right"><span className="font-mono font-semibold">{formatCurrency(sale.grandTotal)}</span></TableCell>
+                    <TableCell align="center"><StatusBadge status={sale.status} /></TableCell>
+                    <TableCell align="center">
+                      {isAdmin && sale.status === "completed" && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}
+                          className="text-sm text-[#DC2626] hover:underline"
+                        >
+                          Void
+                        </button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {filtered.map((sale) => (
+              <div key={sale._id} className="bg-white border border-[#E0E0E0] rounded-md p-4" onClick={() => setSelectedSale(sale._id)}>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-mono text-sm font-semibold">{sale.saleNumber}</p>
+                    <p className="text-xs text-[#9B9B9B] mt-0.5">{formatDateTime(sale.createdAt)}</p>
+                  </div>
+                  <StatusBadge status={sale.status} />
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-3 pt-3 border-t border-[#F0F0F0] text-sm">
+                  <div>
+                    <p className="text-xs text-[#9B9B9B]">Items</p>
+                    <p>{sale.items.reduce((s, i) => s + i.quantity, 0)}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#9B9B9B]">Payment</p>
+                    <p className="capitalize">{methodLabel[sale.paymentMethod] ?? sale.paymentMethod}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-xs text-[#9B9B9B]">Total</p>
+                    <p className="font-mono font-semibold text-base">{formatCurrency(sale.grandTotal)}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                  <button className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
+                    View Details
+                  </button>
+                  {isAdmin && sale.status === "completed" && (
+                    <button className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}>
+                      Void
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Sale Detail Modal */}

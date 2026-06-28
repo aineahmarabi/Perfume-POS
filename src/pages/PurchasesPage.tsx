@@ -129,7 +129,7 @@ export function PurchasesPage() {
   return (
     <AdminLayout title="Purchase Orders">
       <div className="flex justify-end mb-4">
-        <Button onClick={() => setShowNew(true)}><Plus size={16} /> New Purchase Order</Button>
+        <Button onClick={() => setShowNew(true)} className="w-full sm:w-auto"><Plus size={16} /> New Purchase Order</Button>
       </div>
 
       {!orders ? (
@@ -137,41 +137,87 @@ export function PurchasesPage() {
       ) : orders.length === 0 ? (
         <EmptyState message="No purchase orders yet." icon={<Truck size={32} strokeWidth={1.5} />} action={{ label: "Create PO", onClick: () => setShowNew(true) }} />
       ) : (
-        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
-          <Table>
-            <TableHead>
-              <tr>
-                <TableHeader>PO Number</TableHeader>
-                <TableHeader>Supplier</TableHeader>
-                <TableHeader align="center">Items</TableHeader>
-                <TableHeader align="right">Total</TableHeader>
-                <TableHeader align="center">Status</TableHeader>
-                <TableHeader align="center">Date</TableHeader>
-                <TableHeader align="center">Actions</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {orders.map((o) => (
-                <TableRow key={o._id} onClick={() => setSelectedPO(o._id)}>
-                  <TableCell><span className="font-mono text-sm">{o.poNumber}</span></TableCell>
-                  <TableCell>{o.supplierName}</TableCell>
-                  <TableCell align="center">{o.items.length}</TableCell>
-                  <TableCell align="right"><span className="font-mono">{formatCurrency(o.totalAmount)}</span></TableCell>
-                  <TableCell align="center"><StatusBadge status={o.status} /></TableCell>
-                  <TableCell align="center">{formatDate(o.createdAt)}</TableCell>
-                  <TableCell align="center">
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+            <Table>
+              <TableHead>
+                <tr>
+                  <TableHeader>PO Number</TableHeader>
+                  <TableHeader>Supplier</TableHeader>
+                  <TableHeader align="center">Items</TableHeader>
+                  <TableHeader align="right">Total</TableHeader>
+                  <TableHeader align="center">Status</TableHeader>
+                  <TableHeader align="center">Date</TableHeader>
+                  <TableHeader align="center">Actions</TableHeader>
+                </tr>
+              </TableHead>
+              <TableBody>
+                {orders.map((o) => (
+                  <TableRow key={o._id} onClick={() => setSelectedPO(o._id)}>
+                    <TableCell><span className="font-mono text-sm">{o.poNumber}</span></TableCell>
+                    <TableCell>{o.supplierName}</TableCell>
+                    <TableCell align="center">{o.items.length}</TableCell>
+                    <TableCell align="right"><span className="font-mono">{formatCurrency(o.totalAmount)}</span></TableCell>
+                    <TableCell align="center"><StatusBadge status={o.status} /></TableCell>
+                    <TableCell align="center">{formatDate(o.createdAt)}</TableCell>
+                    <TableCell align="center">
+                      {o.status === "draft" && (
+                        <button onClick={(e) => { e.stopPropagation(); updateStatus({ id: o._id as Id<"purchaseOrders">, status: "ordered" }); }} className="text-sm text-[#2563EB] hover:underline">Mark Ordered</button>
+                      )}
+                      {(o.status === "ordered" || o.status === "partial") && (
+                        <button onClick={(e) => { e.stopPropagation(); setSelectedPO(o._id); setReceiveQtys({}); setShowReceive(true); }} className="text-sm text-[#16A34A] hover:underline">Receive Stock</button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {orders.map((o) => (
+              <div key={o._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-mono text-sm font-semibold">{o.poNumber}</p>
+                    <p className="text-xs text-[#9B9B9B] mt-0.5">{o.supplierName}</p>
+                  </div>
+                  <StatusBadge status={o.status} />
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F0F0F0] text-xs">
+                  <div>
+                    <p className="text-[#9B9B9B]">Items</p>
+                    <p className="font-medium text-sm">{o.items.length}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-[#9B9B9B]">Total</p>
+                    <p className="font-mono font-semibold text-sm">{formatCurrency(o.totalAmount)}</p>
+                  </div>
+                  <div className="col-span-3">
+                    <p className="text-[#9B9B9B]">Date</p>
+                    <p className="text-sm">{formatDate(o.createdAt)}</p>
+                  </div>
+                </div>
+                {(o.status === "draft" || o.status === "ordered" || o.status === "partial") && (
+                  <div className="mt-3 pt-3 border-t border-[#F0F0F0] flex gap-2">
                     {o.status === "draft" && (
-                      <button onClick={(e) => { e.stopPropagation(); updateStatus({ id: o._id as Id<"purchaseOrders">, status: "ordered" }); }} className="text-sm text-[#2563EB] hover:underline">Mark Ordered</button>
+                      <button onClick={() => updateStatus({ id: o._id as Id<"purchaseOrders">, status: "ordered" })} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md">
+                        Mark Ordered
+                      </button>
                     )}
                     {(o.status === "ordered" || o.status === "partial") && (
-                      <button onClick={(e) => { e.stopPropagation(); setSelectedPO(o._id); setReceiveQtys({}); setShowReceive(true); }} className="text-sm text-[#16A34A] hover:underline">Receive Stock</button>
+                      <button onClick={() => { setSelectedPO(o._id); setReceiveQtys({}); setShowReceive(true); }} className="flex-1 text-sm text-[#16A34A] py-1.5 border border-[#E0E0E0] rounded-md">
+                        Receive Stock
+                      </button>
                     )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* New PO Modal */}

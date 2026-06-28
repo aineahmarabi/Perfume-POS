@@ -238,9 +238,11 @@ function UserManagement() {
   return (
     <div>
       <div className="flex justify-end mb-4">
-        <Button onClick={() => setShowModal(true)}><Plus size={16} /> Add Staff Member</Button>
+        <Button onClick={() => setShowModal(true)} className="w-full sm:w-auto"><Plus size={16} /> Add Staff Member</Button>
       </div>
-      <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+
+      {/* Desktop table */}
+      <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
         <Table>
           <TableHead>
             <tr>
@@ -275,6 +277,33 @@ function UserManagement() {
             ))}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-3">
+        {users.map((u) => (
+          <div key={u._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-medium text-sm">{u.name}</p>
+                <p className="text-xs text-[#9B9B9B] mt-0.5">{u.email}</p>
+                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{u.role}</p>
+              </div>
+              <StatusBadge status={u.isActive ? "active" : "inactive"} />
+            </div>
+            <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+              <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md flex items-center justify-center gap-1">
+                <RefreshCw size={12} /> Reset PIN
+              </button>
+              <button
+                onClick={() => toggleActive({ id: u._id as Id<"users">, isActive: !u.isActive })}
+                className={`flex-1 text-sm py-1.5 border border-[#E0E0E0] rounded-md ${u.isActive ? "text-[#DC2626]" : "text-[#16A34A]"}`}
+              >
+                {u.isActive ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add Staff Member" maxWidth="sm">

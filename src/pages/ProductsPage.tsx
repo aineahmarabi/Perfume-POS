@@ -248,29 +248,32 @@ export function ProductsPage() {
 
   return (
     <AdminLayout title="Products">
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <SearchInput
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:w-56"
-        />
-        <Select
-          options={[{ value: "", label: "All Brands" }, ...brandOptions]}
-          value={filterBrand}
-          onChange={(e) => setFilterBrand(e.target.value)}
-          className="flex-1 sm:w-36 sm:flex-none"
-        />
-        <Select
-          options={[{ value: "", label: "All Categories" }, ...categoryOptions]}
-          value={filterCategory}
-          onChange={(e) => setFilterCategory(e.target.value)}
-          className="flex-1 sm:w-36 sm:flex-none"
-        />
-        <div className="flex-1" />
-        <Button onClick={openAdd}>
-          <Plus size={16} /> Add Product
-        </Button>
+      <div className="mb-4 space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <SearchInput
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-56"
+          />
+          <Button onClick={openAdd} className="w-full sm:w-auto">
+            <Plus size={16} /> Add Product
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <Select
+            options={[{ value: "", label: "All Brands" }, ...brandOptions]}
+            value={filterBrand}
+            onChange={(e) => setFilterBrand(e.target.value)}
+            className="flex-1"
+          />
+          <Select
+            options={[{ value: "", label: "All Categories" }, ...categoryOptions]}
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="flex-1"
+          />
+        </div>
       </div>
 
       {!products ? (
@@ -278,85 +281,117 @@ export function ProductsPage() {
       ) : filtered.length === 0 ? (
         <EmptyState message="No products found." action={{ label: "Add Product", onClick: openAdd }} />
       ) : (
-        <div className="bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
-          <Table>
-            <TableHead>
-              <tr>
-                <TableHeader>Product</TableHeader>
-                <TableHeader>Brand</TableHeader>
-                <TableHeader>Category</TableHeader>
-                <TableHeader align="center">Variants</TableHeader>
-                <TableHeader align="center">Status</TableHeader>
-                <TableHeader align="right">Actions</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {filtered.map((product) => (
-                <>
-                  <TableRow key={product._id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setExpandedProduct(expandedProduct === product._id ? null : product._id)}
-                          className="text-[#9B9B9B] hover:text-[#6B1A2A] transition-colors"
-                        >
-                          {expandedProduct === product._id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                        </button>
-                        <span className="font-medium text-[#6B1A2A]">{product.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{product.brandName}</TableCell>
-                    <TableCell>{product.categoryName}</TableCell>
-                    <TableCell align="center">
-                      <Badge variant="default">{product.variantCount}</Badge>
-                    </TableCell>
-                    <TableCell align="center">
-                      <StatusBadge status={product.isActive ? "active" : "inactive"} />
-                    </TableCell>
-                    <TableCell align="right">
-                      <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(product)} className="btn-icon hover:bg-[#F0F0F0]">
-                          <Edit size={14} />
-                        </button>
-                        <button
-                          onClick={() => setDeleteId(product._id)}
-                          className="btn-icon hover:bg-red-50 hover:text-[#DC2626] transition-colors"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                  {expandedProduct === product._id && (
-                    <tr className="bg-[#F7F7F7]">
-                      <td colSpan={6} className="px-8 py-3">
-                        <div className="space-y-1">
-                          <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B] mb-2">Variants</p>
-                          {product.variants.map((v) => (
-                            <div key={v._id} className="flex items-center gap-6 text-sm py-1 border-b border-[#E0E0E0] last:border-0">
-                              <span className="font-mono text-sm w-40">{v.sku}</span>
-                              <span className="w-16">{v.sizeMl}ml</span>
-                              <span className="font-mono w-28">{formatCurrency(v.sellingPrice)}</span>
-                              <span className="w-20">Stock: {v.stockQuantity}</span>
-                              <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
-                              {v.isTester && <Badge variant="info">Tester</Badge>}
-                            </div>
-                          ))}
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-[#E0E0E0] rounded-md overflow-hidden">
+            <Table>
+              <TableHead>
+                <tr>
+                  <TableHeader>Product</TableHeader>
+                  <TableHeader>Brand</TableHeader>
+                  <TableHeader>Category</TableHeader>
+                  <TableHeader align="center">Variants</TableHeader>
+                  <TableHeader align="center">Status</TableHeader>
+                  <TableHeader align="right">Actions</TableHeader>
+                </tr>
+              </TableHead>
+              <TableBody>
+                {filtered.map((product) => (
+                  <>
+                    <TableRow key={product._id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setExpandedProduct(expandedProduct === product._id ? null : product._id)}
+                            className="text-[#9B9B9B] hover:text-[#6B1A2A] transition-colors"
+                          >
+                            {expandedProduct === product._id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                          </button>
+                          <span className="font-medium text-[#6B1A2A]">{product.name}</span>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                      <TableCell>{product.brandName}</TableCell>
+                      <TableCell>{product.categoryName}</TableCell>
+                      <TableCell align="center">
+                        <Badge variant="default">{product.variantCount}</Badge>
+                      </TableCell>
+                      <TableCell align="center">
+                        <StatusBadge status={product.isActive ? "active" : "inactive"} />
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button onClick={() => openEdit(product)} className="btn-icon hover:bg-[#F0F0F0]">
+                            <Edit size={14} />
+                          </button>
+                          <button
+                            onClick={() => setDeleteId(product._id)}
+                            className="btn-icon hover:bg-red-50 hover:text-[#DC2626] transition-colors"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    {expandedProduct === product._id && (
+                      <tr className="bg-[#F7F7F7]">
+                        <td colSpan={6} className="px-8 py-3">
+                          <div className="space-y-1">
+                            <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B] mb-2">Variants</p>
+                            {product.variants.map((v) => (
+                              <div key={v._id} className="flex items-center gap-6 text-sm py-1 border-b border-[#E0E0E0] last:border-0">
+                                <span className="font-mono text-sm w-40">{v.sku}</span>
+                                <span className="w-16">{v.sizeMl}ml</span>
+                                <span className="font-mono w-28">{formatCurrency(v.sellingPrice)}</span>
+                                <span className="w-20">Stock: {v.stockQuantity}</span>
+                                <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
+                                {v.isTester && <Badge variant="info">Tester</Badge>}
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {filtered.map((product) => (
+              <div key={product._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
+                <div className="flex items-start gap-3">
+                  {product.imageUrl ? (
+                    <img src={product.imageUrl} alt={product.name} className="w-14 h-14 rounded object-cover flex-shrink-0 bg-[#F7F7F7]" />
+                  ) : (
+                    <div className="w-14 h-14 rounded bg-[#F7F7F7] flex-shrink-0 flex items-center justify-center">
+                      <span className="text-xs text-[#9B9B9B]">IMG</span>
+                    </div>
                   )}
-                </>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm text-[#6B1A2A] truncate">{product.name}</p>
+                    <p className="text-xs text-[#9B9B9B]">{product.brandName} · {product.categoryName}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="default">{product.variantCount} variant{product.variantCount !== 1 ? "s" : ""}</Badge>
+                      <StatusBadge status={product.isActive ? "active" : "inactive"} />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                  <button onClick={() => openEdit(product)} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md">Edit</button>
+                  <button onClick={() => setDeleteId(product._id)} className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md">Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Product Form Modal */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingId ? "Edit Product" : "Add Product"} maxWidth="lg">
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input label="Product Name *" value={productForm.name} onChange={(e) => setProductForm({ ...productForm, name: e.target.value })} placeholder="e.g. Eros EDT" />
 
             {/* Brand field with quick-add */}
@@ -457,7 +492,7 @@ export function ProductsPage() {
                       <button onClick={() => setVariants(variants.filter((_, idx) => idx !== i))} className="text-[#DC2626] hover:text-[#b91c1c] text-sm">Remove</button>
                     )}
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     <Input label="SKU" value={v.sku} onChange={(e) => setVariants(variants.map((x, idx) => idx === i ? { ...x, sku: e.target.value } : x))} placeholder="Auto-generated" />
                     <Input label="Size (ml)" type="number" value={v.sizeMl} onChange={(e) => setVariants(variants.map((x, idx) => idx === i ? { ...x, sizeMl: parseFloat(e.target.value) || 0 } : x))} />
                     <Input label="Barcode (optional)" value={v.barcode} onChange={(e) => setVariants(variants.map((x, idx) => idx === i ? { ...x, barcode: e.target.value } : x))} />

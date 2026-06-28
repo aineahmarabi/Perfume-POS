@@ -59,11 +59,13 @@ function DateRangeFilter({ startDate, endDate, onStartChange, onEndChange }: {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-6">
-      <Input type="date" value={startDate} onChange={(e) => onStartChange(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
-      <span className="text-[#9B9B9B]">to</span>
-      <Input type="date" value={endDate} onChange={(e) => onEndChange(e.target.value)} className="flex-1 sm:w-36 sm:flex-none" />
-      <div className="flex gap-2 flex-wrap">
+    <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 flex-1">
+        <Input type="date" value={startDate} onChange={(e) => onStartChange(e.target.value)} className="flex-1" />
+        <span className="text-[#9B9B9B] flex-shrink-0">to</span>
+        <Input type="date" value={endDate} onChange={(e) => onEndChange(e.target.value)} className="flex-1" />
+      </div>
+      <div className="flex gap-2">
         <Button size="sm" variant="secondary" onClick={() => setPreset(7)}>7 Days</Button>
         <Button size="sm" variant="secondary" onClick={() => setPreset(30)}>30 Days</Button>
         <Button size="sm" variant="secondary" onClick={() => setPreset(90)}>90 Days</Button>
