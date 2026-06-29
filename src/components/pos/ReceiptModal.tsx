@@ -51,7 +51,7 @@ export function ReceiptModal({ isOpen, saleId, onNewSale }: ReceiptModalProps) {
       </div>
 
       {/* Printable receipt */}
-      <div className="receipt-printable border border-[#E0E0E0] rounded-md p-4 font-mono text-sm text-[#8B5A2B]">
+      <div className="receipt-printable border border-[#E0E0E0] rounded-md p-4 font-mono text-sm text-[#3432a8]">
         <div className="text-center mb-3">
           <p className="font-bold text-sm">{shopName}</p>
           {shopAddress && <p>{shopAddress}</p>}

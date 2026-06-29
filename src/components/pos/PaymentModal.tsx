@@ -260,8 +260,8 @@ export function PaymentModal({
             onClick={() => { setMethod(tab.key); setError(""); setMpesaStatus("idle"); }}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
               method === tab.key
-                ? "border-[#8B5A2B] text-[#8B5A2B]"
-                : "border-transparent text-[#6B6B6B] hover:text-[#8B5A2B]"
+                ? "border-[#3432a8] text-[#3432a8]"
+                : "border-transparent text-[#6B6B6B] hover:text-[#3432a8]"
             }`}
           >
             <tab.icon size={14} />
@@ -341,7 +341,7 @@ export function PaymentModal({
               <div className="flex justify-center">
                 <Clock size={40} className="text-[#2563EB] animate-pulse" />
               </div>
-              <p className="text-sm font-medium text-[#8B5A2B]">Waiting for M-Pesa confirmation...</p>
+              <p className="text-sm font-medium text-[#3432a8]">Waiting for M-Pesa confirmation...</p>
               <p className="text-sm text-[#6B6B6B]">Ask customer to enter their M-Pesa PIN</p>
               <p className="text-sm text-[#9B9B9B]">Phone: {mpesaPhone}</p>
             </div>
@@ -351,7 +351,7 @@ export function PaymentModal({
             <div className="space-y-4">
               <div className="text-center py-4 space-y-2">
                 <CheckCircle size={40} className="text-[#16A34A] mx-auto" />
-                <p className="text-sm font-medium text-[#8B5A2B]">M-Pesa payment confirmed!</p>
+                <p className="text-sm font-medium text-[#3432a8]">M-Pesa payment confirmed!</p>
                 <p className="text-sm text-[#6B6B6B] font-mono">{mpesaRef}</p>
               </div>
               <Button onClick={handleMpesaComplete} loading={loading} className="w-full h-12 text-sm">
@@ -364,7 +364,7 @@ export function PaymentModal({
             <div className="space-y-4">
               <div className="text-center py-4 space-y-2">
                 <XCircle size={40} className="text-[#DC2626] mx-auto" />
-                <p className="text-sm font-medium text-[#8B5A2B]">Payment failed</p>
+                <p className="text-sm font-medium text-[#3432a8]">Payment failed</p>
                 <p className="text-sm text-[#6B6B6B]">Ask customer to check their M-Pesa and try again</p>
               </div>
               <Button onClick={() => { setMpesaStatus("idle"); setError(""); }} variant="secondary" className="w-full">

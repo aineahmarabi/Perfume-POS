@@ -18,7 +18,7 @@ export function StatCard({ title, value, subtitle, trend, icon, className }: Sta
         <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B]">{title}</p>
         {icon && <div className="text-[#9B9B9B]">{icon}</div>}
       </div>
-      <p className="text-2xl font-semibold font-mono tabular-nums text-[#8B5A2B]">{value}</p>
+      <p className="text-2xl font-semibold font-mono tabular-nums text-[#3432a8]">{value}</p>
       {subtitle && <p className="text-sm text-[#9B9B9B] mt-1">{subtitle}</p>}
       {trend && (
         <div className={cn("flex items-center gap-1 mt-2 text-sm font-medium", trend.value >= 0 ? "text-[#16A34A]" : "text-[#DC2626]")}>

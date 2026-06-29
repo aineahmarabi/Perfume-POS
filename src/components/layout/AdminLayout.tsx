@@ -18,7 +18,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         <div className="p-4 md:p-6 max-w-[1400px]">
           {title && (
             <div className="flex items-center justify-between mb-4 md:mb-6">
-              <h1 className="text-lg md:text-xl font-semibold text-[#8B5A2B] tracking-tight">
+              <h1 className="text-lg md:text-xl font-semibold text-[#3432a8] tracking-tight">
                 {title}
               </h1>
               <div className="w-10 h-10 rounded-full bg-white border border-[#E0E0E0] shadow-sm overflow-hidden flex-shrink-0">

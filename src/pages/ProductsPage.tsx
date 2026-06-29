@@ -436,11 +436,11 @@ export function ProductsPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setExpandedProduct(expandedProduct === product._id ? null : product._id)}
-                            className="text-[#9B9B9B] hover:text-[#8B5A2B] transition-colors"
+                            className="text-[#9B9B9B] hover:text-[#3432a8] transition-colors"
                           >
                             {expandedProduct === product._id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                           </button>
-                          <span className="font-medium text-[#8B5A2B]">{product.name}</span>
+                          <span className="font-medium text-[#3432a8]">{product.name}</span>
                         </div>
                       </TableCell>
                       <TableCell>{product.brandName}</TableCell>
@@ -503,7 +503,7 @@ export function ProductsPage() {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-[#8B5A2B] truncate">{product.name}</p>
+                    <p className="font-medium text-sm text-[#3432a8] truncate">{product.name}</p>
                     <p className="text-xs text-[#9B9B9B]">{product.brandName} · {product.categoryName}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge variant="default">{product.variantCount} variant{product.variantCount !== 1 ? "s" : ""}</Badge>
@@ -530,12 +530,12 @@ export function ProductsPage() {
             {/* Brand field with quick-add */}
             <div>
               <div className="flex items-center gap-1 mb-1">
-                <label className="text-sm font-medium text-[#8B5A2B]">Brand *</label>
+                <label className="text-sm font-medium text-[#3432a8]">Brand *</label>
                 {!showAddBrand && (
                   <button
                     type="button"
                     onClick={() => { setShowAddBrand(true); setNewBrandName(""); }}
-                    className="ml-auto flex items-center gap-1 text-sm text-[#8B5A2B] hover:text-[#6F4520] font-medium"
+                    className="ml-auto flex items-center gap-1 text-sm text-[#3432a8] hover:text-[#262485] font-medium"
                     title="Add new brand"
                   >
                     <Plus size={13} /> New
@@ -567,12 +567,12 @@ export function ProductsPage() {
             {/* Category field with quick-add */}
             <div>
               <div className="flex items-center gap-1 mb-1">
-                <label className="text-sm font-medium text-[#8B5A2B]">Category *</label>
+                <label className="text-sm font-medium text-[#3432a8]">Category *</label>
                 {!showAddCategory && (
                   <button
                     type="button"
                     onClick={() => { setShowAddCategory(true); setNewCategoryName(""); }}
-                    className="ml-auto flex items-center gap-1 text-sm text-[#8B5A2B] hover:text-[#6F4520] font-medium"
+                    className="ml-auto flex items-center gap-1 text-sm text-[#3432a8] hover:text-[#262485] font-medium"
                     title="Add new category"
                   >
                     <Plus size={13} /> New
@@ -671,7 +671,7 @@ export function ProductsPage() {
             <p className="text-sm text-[#6B6B6B]">Upload a CSV file to bulk-create products and variants.</p>
             <button
               onClick={downloadTemplate}
-              className="flex items-center gap-1 text-sm text-[#8B5A2B] hover:underline font-medium"
+              className="flex items-center gap-1 text-sm text-[#3432a8] hover:underline font-medium"
             >
               <Download size={14} /> Download Template
             </button>
