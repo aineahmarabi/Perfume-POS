@@ -120,7 +120,7 @@ export function useCart() {
     const discountedSubtotal = subtotal - saleDiscountAmount;
     const discountTotal = itemDiscounts + saleDiscountAmount;
 
-    // Tax inclusive — VAT is included in the price
+    // Tax inclusive - VAT is included in the price
     const TAX_RATE = 0.16;
     const taxAmount = discountedSubtotal - discountedSubtotal / (1 + TAX_RATE);
     const grandTotal = discountedSubtotal;

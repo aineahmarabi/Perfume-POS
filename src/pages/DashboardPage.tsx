@@ -88,7 +88,7 @@ function KpiCard({
               <span className="text-xs text-[#9B9B9B] ml-0.5">vs yesterday</span>
             </>
           ) : (
-            <span className="text-xs">—</span>
+            <span className="text-xs">-</span>
           )}
         </div>
       </div>
@@ -435,7 +435,7 @@ export function DashboardPage() {
                         {product.productName}
                       </p>
                       <p className="text-[10px] text-[#9B9B9B] truncate">
-                        {product.brandName} · {product.sizeMl}ml
+                        {product.brandName} Â· {product.sizeMl}ml
                       </p>
                     </div>
                     <span className="text-xs font-semibold text-right w-8 flex-shrink-0">
@@ -489,7 +489,7 @@ export function DashboardPage() {
                         {item.productName}
                       </p>
                       <p className="text-xs text-[#9B9B9B]">
-                        {item.brandName} · {item.sizeMl}ml
+                        {item.brandName} Â· {item.sizeMl}ml
                       </p>
                     </div>
                     <span className="text-xs font-semibold text-[#DC2626] bg-red-50 px-2 py-0.5 rounded-full flex-shrink-0 whitespace-nowrap">
@@ -505,7 +505,7 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Action Bar — desktop only */}
+      {/* Quick Action Bar - desktop only */}
       <div
         className="hidden lg:flex fixed bottom-0 z-20 bg-white border-t border-[#E0E0E0] h-12 px-6 items-center gap-1"
         style={{ left: 240, right: 0 }}

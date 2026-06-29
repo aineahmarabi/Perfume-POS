@@ -81,7 +81,7 @@ export function ImageUpload({ value, onChange, label = "Product Image" }: ImageU
               <p className="text-sm font-medium text-[#1E1B3A] text-center">
                 {dragging ? "Drop to upload" : "Drag & drop or click to upload"}
               </p>
-              <p className="text-sm text-[#9B9B9B]">PNG, JPG, WEBP — max 5MB</p>
+              <p className="text-sm text-[#9B9B9B]">PNG, JPG, WEBP - max 5MB</p>
             </>
           )}
         </div>

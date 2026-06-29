@@ -504,7 +504,7 @@ export function ProductsPage() {
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm text-[#1E1B3A] truncate">{product.name}</p>
-                    <p className="text-xs text-[#9B9B9B]">{product.brandName} · {product.categoryName}</p>
+                    <p className="text-xs text-[#9B9B9B]">{product.brandName} Â· {product.categoryName}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge variant="default">{product.variantCount} variant{product.variantCount !== 1 ? "s" : ""}</Badge>
                       <StatusBadge status={product.isActive ? "active" : "inactive"} />
@@ -731,7 +731,7 @@ export function ProductsPage() {
                   </tbody>
                 </table>
                 {importRows.length > 50 && (
-                  <p className="text-xs text-[#9B9B9B] px-3 py-2">…and {importRows.length - 50} more rows</p>
+                  <p className="text-xs text-[#9B9B9B] px-3 py-2">â€¦and {importRows.length - 50} more rows</p>
                 )}
               </div>
             </div>

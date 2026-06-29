@@ -73,7 +73,7 @@ export function ReceiptModal({ isOpen, saleId, onNewSale }: ReceiptModalProps) {
             <div key={i}>
               <p className="font-medium">{item.productName} {item.brandName} {item.sizeMl}ml</p>
               <div className="flex justify-between pl-2">
-                <span>{item.quantity} × {formatCurrency(item.unitPrice)}</span>
+                <span>{item.quantity} Ã— {formatCurrency(item.unitPrice)}</span>
                 <span>{formatCurrency(item.lineTotal)}</span>
               </div>
               {item.discount > 0 && (

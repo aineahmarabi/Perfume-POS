@@ -32,7 +32,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       <main className="flex-1 min-h-screen md:ml-60 pb-28 md:pb-0 min-w-0 overflow-x-hidden flex flex-col">
         {/* Top header bar */}
         <header className="sticky top-0 z-20 bg-white border-b border-[#E0E0E0] h-14 px-4 md:px-6 flex items-center gap-3 flex-shrink-0">
-          {/* Hamburger — mobile only */}
+          {/* Hamburger - mobile only */}
           <button
             className="md:hidden p-1.5 rounded-md hover:bg-[#F0F0F0] text-[#6B6B6B] flex-shrink-0"
             onClick={() => setMobileMenuOpen(true)}

@@ -118,7 +118,7 @@ export function InventoryPage() {
         </div>
       </div>
 
-      {/* ── STOCK OVERVIEW ── */}
+      {/* â"€â"€ STOCK OVERVIEW â"€â"€ */}
       {activeTab === "stock" && (
         <>
           <div className="mb-3">
@@ -180,7 +180,7 @@ export function InventoryPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="font-medium text-sm text-[#1E1B3A] truncate">{v.productName}</p>
-                        <p className="text-xs text-[#9B9B9B]">{v.brandName} · {v.sizeMl}ml</p>
+                        <p className="text-xs text-[#9B9B9B]">{v.brandName} Â· {v.sizeMl}ml</p>
                         <p className="text-xs font-mono text-[#9B9B9B] mt-0.5">{v.sku}</p>
                       </div>
                       <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
@@ -212,7 +212,7 @@ export function InventoryPage() {
         </>
       )}
 
-      {/* ── LOW STOCK ── */}
+      {/* â"€â"€ LOW STOCK â"€â"€ */}
       {activeTab === "low" && (
         <>
           {!lowStock ? (
@@ -262,7 +262,7 @@ export function InventoryPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="font-medium text-sm text-[#1E1B3A]">{v.productName} {v.sizeMl}ml</p>
-                        <p className="text-xs text-[#9B9B9B]">{v.brandName} · {v.sku}</p>
+                        <p className="text-xs text-[#9B9B9B]">{v.brandName} Â· {v.sku}</p>
                       </div>
                       <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
                     </div>
@@ -289,7 +289,7 @@ export function InventoryPage() {
         </>
       )}
 
-      {/* ── EXPIRY ALERTS ── */}
+      {/* â"€â"€ EXPIRY ALERTS â"€â"€ */}
       {activeTab === "expiry" && (
         <>
           {!expiryAlerts ? (
@@ -346,7 +346,7 @@ export function InventoryPage() {
                   return (
                     <div key={v._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
                       <p className="font-medium text-sm text-[#1E1B3A]">{v.productName} {v.sizeMl}ml</p>
-                      <p className="text-xs text-[#9B9B9B] mt-0.5">{v.brandName} · {v.sku}</p>
+                      <p className="text-xs text-[#9B9B9B] mt-0.5">{v.brandName} Â· {v.sku}</p>
                       <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F0F0F0] text-xs text-center">
                         <div>
                           <p className="text-[#9B9B9B]">Stock</p>
@@ -385,7 +385,7 @@ export function InventoryPage() {
           <div className="space-y-4">
             <div className="bg-[#F7F7F7] rounded-md p-3">
               <p className="text-sm font-medium">{adjustingItem.productName} {adjustingItem.sizeMl}ml</p>
-              <p className="text-sm text-[#6B6B6B]">{adjustingItem.sku} · Current stock: {adjustingItem.stockQuantity}</p>
+              <p className="text-sm text-[#6B6B6B]">{adjustingItem.sku} Â· Current stock: {adjustingItem.stockQuantity}</p>
             </div>
             <Input
               label="New Stock Quantity"

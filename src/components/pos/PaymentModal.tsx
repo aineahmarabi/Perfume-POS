@@ -251,7 +251,7 @@ export function PaymentModal({
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Payment — ${formatCurrency(grandTotal)}`} maxWidth="md">
+    <Modal isOpen={isOpen} onClose={onClose} title={`Payment â€” ${formatCurrency(grandTotal)}`} maxWidth="md">
       {/* Tabs */}
       <div className="flex border-b border-[#E0E0E0] mb-4 -mx-6 px-6">
         {tabs.map((tab) => (

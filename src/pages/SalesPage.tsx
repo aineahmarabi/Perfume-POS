@@ -228,7 +228,7 @@ export function SalesPage() {
                   <p className="font-medium text-sm">{item.productName} {item.brandName} {item.sizeMl}ml</p>
                   <p className="text-xs text-[#9B9B9B] mb-2">{item.sku}</p>
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#9B9B9B]">Qty: {item.quantity} × {formatCurrency(item.unitPrice)}</span>
+                    <span className="text-[#9B9B9B]">Qty: {item.quantity} x {formatCurrency(item.unitPrice)}</span>
                     <span className="font-mono font-semibold">{formatCurrency(item.lineTotal)}</span>
                   </div>
                 </div>

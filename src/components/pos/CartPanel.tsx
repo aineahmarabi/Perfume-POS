@@ -106,7 +106,7 @@ export function CartPanel({
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-[#1E1B3A] truncate">{item.productName}</p>
                     <p className="text-sm text-[#9B9B9B]">
-                      {item.brandName} · {item.sizeMl}ml · {item.sku}
+                      {item.brandName} Â· {item.sizeMl}ml Â· {item.sku}
                     </p>
                     <p className="text-sm text-[#6B6B6B] mt-0.5 font-mono">
                       {formatCurrency(item.unitPrice)} each
@@ -202,7 +202,7 @@ export function CartPanel({
           className="w-full h-12 text-sm"
           variant="primary"
         >
-          Pay Now — {formatCurrency(totals.grandTotal)} (F12)
+          Pay Now â€” {formatCurrency(totals.grandTotal)} (F12)
         </Button>
       </div>
 
