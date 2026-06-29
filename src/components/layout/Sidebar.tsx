@@ -100,26 +100,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         ))}
       </nav>
 
-      {/* Current session block */}
-      <div className="px-4 py-3 border-t border-white/20">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-white/40 mb-2">Current Session</p>
-        <div className="flex items-center gap-2.5 mb-2">
-          <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-            <span className="text-xs font-bold text-white">
-              {user?.name?.charAt(0).toUpperCase() ?? "A"}
-            </span>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white leading-none">{user?.name ?? "Admin"}</p>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <p className="text-xs text-white/60 capitalize">{user?.role ?? "cashier"}</p>
-            </div>
-          </div>
-        </div>
-        <p className="text-xs text-white/40">POS Terminal 01</p>
-      </div>
-
       {/* Sign out */}
       <div className="border-t border-white/20 p-3">
         <button

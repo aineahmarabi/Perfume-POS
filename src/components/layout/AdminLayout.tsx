@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Search, Menu, Settings } from "lucide-react";
+import { Search, Menu, Settings } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { Sidebar } from "./Sidebar";
 import { BottomNav } from "./BottomNav";
@@ -51,12 +51,10 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-1.5 ml-auto">
-            <button className="p-1.5 rounded-md hover:bg-[#F0F0F0] text-[#6B6B6B]">
-              <Bell size={19} />
-            </button>
             <button
               className="p-1.5 rounded-md hover:bg-[#F0F0F0] text-[#6B6B6B]"
               onClick={() => navigate("/settings")}
+              title="Settings"
             >
               <Settings size={19} />
             </button>
@@ -65,8 +63,8 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                 {initials}
               </div>
               <div className="hidden sm:block leading-tight">
-                <p className="text-sm font-semibold text-[#0A0A0A] leading-none">{user?.name ?? "Admin"}</p>
-                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{user?.role ?? "administrator"}</p>
+                <p className="text-sm font-semibold text-[#0A0A0A] leading-none">{user?.name}</p>
+                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{user?.role}</p>
               </div>
             </div>
           </div>
