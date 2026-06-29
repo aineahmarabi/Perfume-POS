@@ -11,7 +11,7 @@ import { Input } from "../components/ui/Input";
 import { Select } from "../components/ui/Select";
 import { StockBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
-import { formatCurrency, formatDate } from "../lib/utils";
+import { formatCurrency } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
 import { STOCK_ADJUSTMENT_REASONS } from "../lib/constants";
 import { AlertTriangle } from "lucide-react";
