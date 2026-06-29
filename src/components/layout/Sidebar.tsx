@@ -11,7 +11,6 @@ import {
   Settings,
   LogOut,
   LayoutDashboard,
-  Lock,
   X,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -47,11 +46,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   const shopName = settings === undefined ? "" : (settings["shop_name"] ?? "Perfume POS");
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const handleLockSession = () => {
     logout();
     navigate("/login");
   };
@@ -95,8 +89,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               cn(
                 "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100 mx-2 rounded-md",
                 isActive
-                  ? "bg-white text-[#685b8a] font-semibold shadow-sm"
-                  : "text-white/80 hover:bg-white/15 hover:text-white"
+                  ? "bg-[#3D3777] text-white font-semibold"
+                  : "text-white/60 hover:bg-[#2D2A5E] hover:text-white"
               )
             }
           >
@@ -123,21 +117,14 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             </div>
           </div>
         </div>
-        <p className="text-xs text-white/40 mb-2">POS Terminal 01</p>
-        <button
-          onClick={handleLockSession}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-white/70 border border-white/20 rounded-md hover:bg-white/10 hover:text-white transition-colors duration-100"
-        >
-          <Lock size={12} />
-          Lock Session
-        </button>
+        <p className="text-xs text-white/40">POS Terminal 01</p>
       </div>
 
       {/* Sign out */}
       <div className="border-t border-white/20 p-3">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:bg-white/15 hover:text-white rounded-md w-full transition-colors duration-100"
+          className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/60 hover:bg-[#2D2A5E] hover:text-white rounded-md w-full transition-colors duration-100"
         >
           <LogOut size={16} strokeWidth={1.5} />
           Sign Out
@@ -151,7 +138,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 bg-[#685b8a] fixed left-0 top-0 h-screen flex-col z-30">
+      <aside className="hidden md:flex w-60 bg-[#1E1B3A] fixed left-0 top-0 h-screen flex-col z-30">
         <SidebarContent />
       </aside>
 
@@ -162,7 +149,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
             className="fixed inset-0 bg-black/40 z-40"
             onClick={onMobileClose}
           />
-          <aside className="fixed left-0 top-0 h-screen w-64 bg-[#685b8a] flex flex-col z-50">
+          <aside className="fixed left-0 top-0 h-screen w-64 bg-[#1E1B3A] flex flex-col z-50">
             <SidebarContent onClose={onMobileClose} />
           </aside>
         </div>
