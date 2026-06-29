@@ -1,4 +1,4 @@
-﻿import { forwardRef } from "react";
+import { forwardRef } from "react";
 import type { InputHTMLAttributes } from "react";
 import { Search } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -19,7 +19,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={ref}
           type="text"
           className={cn(
-            "h-10 pl-9 pr-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#685b8a] focus:ring-1 focus:ring-[#685b8a] outline-none transition-all duration-150 text-[#685b8a] placeholder:text-[#9B9B9B]",
+            "h-10 pl-9 pr-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#1E1B3A] focus:ring-1 focus:ring-[#1E1B3A] outline-none transition-all duration-150 text-[#1E1B3A] placeholder:text-[#9B9B9B]",
             className
           )}
           {...props}

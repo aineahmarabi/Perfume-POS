@@ -1,4 +1,4 @@
-ï»¿import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -111,7 +111,7 @@ export function POSPage() {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden pb-0 md:pb-0">
       {/* POS Header */}
-      <header className="h-14 bg-[#685b8a] text-white flex items-center px-4 gap-3 flex-shrink-0">
+      <header className="h-14 bg-[#1E1B3A] text-white flex items-center px-4 gap-3 flex-shrink-0">
         {/* Brand */}
         <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
           <LayoutGrid size={16} />
@@ -145,7 +145,7 @@ export function POSPage() {
           <span className="hidden sm:inline max-w-[100px] truncate">{user?.name}</span>
         </div>
 
-        {/* Dashboard button â€” admin only, clearly labelled */}
+        {/* Dashboard button — admin only, clearly labelled */}
         {user?.role === "admin" && (
           <button
             onClick={() => navigate("/")}
@@ -169,12 +169,12 @@ export function POSPage() {
 
       {/* Main POS Area */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Product area â€” full width on mobile, 60% on desktop */}
+        {/* Product area — full width on mobile, 60% on desktop */}
         <div className={`overflow-hidden transition-all ${mobileTab === "cart" ? "hidden md:flex md:flex-1" : "flex-1"}`}>
           <ProductGrid onAddItem={(item) => { cart.addItem(item); }} searchRef={searchRef} />
         </div>
 
-        {/* Cart panel â€” full screen on mobile when active, 40% on desktop */}
+        {/* Cart panel — full screen on mobile when active, 40% on desktop */}
         <div className={`flex-shrink-0 md:w-[40%] md:max-w-md ${mobileTab === "products" ? "hidden md:block" : "w-full"}`}>
           <CartPanel
             items={cart.items}
@@ -197,13 +197,13 @@ export function POSPage() {
         {mobileTab === "products" && (
           <button
             onClick={() => setMobileTab("cart")}
-            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#685b8a] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
+            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#1E1B3A] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
           >
             <ShoppingCart size={16} />
             {cart.items.length > 0 ? (
               <>
                 <span>{cart.items.reduce((s, i) => s + i.quantity, 0)} item{cart.items.reduce((s, i) => s + i.quantity, 0) !== 1 ? "s" : ""}</span>
-                <span className="opacity-70">Â·</span>
+                <span className="opacity-70">·</span>
                 <span className="font-mono">{formatCurrency(cart.totals.grandTotal)}</span>
               </>
             ) : (
@@ -238,7 +238,7 @@ export function POSPage() {
         onNewSale={() => { setShowReceipt(false); setCompletedSaleId(null); }}
       />
 
-      {/* Bottom nav â€” mobile only */}
+      {/* Bottom nav — mobile only */}
       <BottomNav />
 
       {/* Held Sales Dialog */}

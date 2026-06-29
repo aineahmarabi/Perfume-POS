@@ -34,7 +34,7 @@ import {
   Zap,
 } from "lucide-react";
 
-const ACCENT = "#685b8a";
+const ACCENT = "#1E1B3A";
 const CATEGORY_COLORS = ["#8B5CF6", "#3B82F6", "#EC4899", "#F59E0B", "#10B981", "#6366F1"];
 const PAYMENT_COLORS: Record<string, string> = {
   cash: "#10B981",
@@ -174,7 +174,7 @@ export function DashboardPage() {
               value={formatCurrencyShort(kpis.revenue.today)}
               icon={<ShoppingBag size={22} />}
               change={kpis.revenue.pctChange ?? null}
-              iconBg="#f0edf5"
+              iconBg="#e8e7ef"
               iconColor={ACCENT}
             />
             <KpiCard
@@ -400,7 +400,7 @@ export function DashboardPage() {
               </p>
               <button
                 onClick={() => navigate("/products")}
-                className="flex items-center gap-1 text-xs text-[#685b8a] hover:underline"
+                className="flex items-center gap-1 text-xs text-[#1E1B3A] hover:underline"
               >
                 View All <ArrowRight size={11} />
               </button>
@@ -463,7 +463,7 @@ export function DashboardPage() {
               </p>
               <button
                 onClick={() => navigate("/inventory")}
-                className="flex items-center gap-1 text-xs text-[#685b8a] hover:underline"
+                className="flex items-center gap-1 text-xs text-[#1E1B3A] hover:underline"
               >
                 View All <ArrowRight size={11} />
               </button>
@@ -517,7 +517,7 @@ export function DashboardPage() {
           <button
             key={action.shortcut}
             onClick={() => navigate(action.path)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[#6B6B6B] hover:text-[#685b8a] hover:bg-[#F7F7F7] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[#6B6B6B] hover:text-[#1E1B3A] hover:bg-[#F7F7F7] transition-colors"
           >
             <action.icon size={13} />
             <span className="text-xs">{action.label}</span>

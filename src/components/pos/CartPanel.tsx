@@ -1,4 +1,4 @@
-Ôªøimport { useState } from "react";
+import { useState } from "react";
 import { Plus, Minus, X, User, Tag, PauseCircle, Trash2 } from "lucide-react";
 import type { CartItem } from "../../hooks/useCart";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -63,9 +63,9 @@ export function CartPanel({
       {onBack && (
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-[#685b8a] border-b border-[#E0E0E0] bg-[#F7F7F7] hover:bg-[#F0F0F0] transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-[#1E1B3A] border-b border-[#E0E0E0] bg-[#F7F7F7] hover:bg-[#F0F0F0] transition-colors"
         >
-          ‚Üê Products
+          ? Products
         </button>
       )}
       {/* Customer row */}
@@ -73,10 +73,10 @@ export function CartPanel({
         <User size={14} className="text-[#9B9B9B]" />
         <button
           onClick={() => setShowCustomerLookup(true)}
-          className="flex-1 text-left text-sm text-[#6B6B6B] hover:text-[#685b8a] transition-colors"
+          className="flex-1 text-left text-sm text-[#6B6B6B] hover:text-[#1E1B3A] transition-colors"
         >
           {customerName ? (
-            <span className="text-[#685b8a] font-medium">{customerName}</span>
+            <span className="text-[#1E1B3A] font-medium">{customerName}</span>
           ) : (
             "Walk-in Customer"
           )}
@@ -104,9 +104,9 @@ export function CartPanel({
               <div key={item.variantId} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#685b8a] truncate">{item.productName}</p>
+                    <p className="text-sm font-medium text-[#1E1B3A] truncate">{item.productName}</p>
                     <p className="text-sm text-[#9B9B9B]">
-                      {item.brandName} ¬∑ {item.sizeMl}ml ¬∑ {item.sku}
+                      {item.brandName} ∑ {item.sizeMl}ml ∑ {item.sku}
                     </p>
                     <p className="text-sm text-[#6B6B6B] mt-0.5 font-mono">
                       {formatCurrency(item.unitPrice)} each
@@ -162,7 +162,7 @@ export function CartPanel({
           <span>VAT (16%)</span>
           <span className="font-mono tabular-nums">{formatCurrency(totals.taxAmount)}</span>
         </div>
-        <div className="flex justify-between text-sm font-semibold text-[#685b8a] pt-2 border-t border-[#E0E0E0]">
+        <div className="flex justify-between text-sm font-semibold text-[#1E1B3A] pt-2 border-t border-[#E0E0E0]">
           <span>Total</span>
           <span className="font-mono tabular-nums">{formatCurrency(totals.grandTotal)}</span>
         </div>
@@ -202,7 +202,7 @@ export function CartPanel({
           className="w-full h-12 text-sm"
           variant="primary"
         >
-          Pay Now ‚Äî {formatCurrency(totals.grandTotal)} (F12)
+          Pay Now ó {formatCurrency(totals.grandTotal)} (F12)
         </Button>
       </div>
 

@@ -1,4 +1,4 @@
-﻿import { useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { Modal } from "../ui/Modal";
@@ -51,7 +51,7 @@ export function ReceiptModal({ isOpen, saleId, onNewSale }: ReceiptModalProps) {
       </div>
 
       {/* Printable receipt */}
-      <div className="receipt-printable border border-[#E0E0E0] rounded-md p-4 font-mono text-sm text-[#685b8a]">
+      <div className="receipt-printable border border-[#E0E0E0] rounded-md p-4 font-mono text-sm text-[#1E1B3A]">
         <div className="text-center mb-3">
           <p className="font-bold text-sm">{shopName}</p>
           {shopAddress && <p>{shopAddress}</p>}
@@ -73,7 +73,7 @@ export function ReceiptModal({ isOpen, saleId, onNewSale }: ReceiptModalProps) {
             <div key={i}>
               <p className="font-medium">{item.productName} {item.brandName} {item.sizeMl}ml</p>
               <div className="flex justify-between pl-2">
-                <span>{item.quantity} × {formatCurrency(item.unitPrice)}</span>
+                <span>{item.quantity} � {formatCurrency(item.unitPrice)}</span>
                 <span>{formatCurrency(item.lineTotal)}</span>
               </div>
               {item.discount > 0 && (

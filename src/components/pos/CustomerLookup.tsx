@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -66,8 +66,8 @@ export function CustomerLookup({ isOpen, onClose, onSelect }: CustomerLookupProp
                 onClick={() => onSelect(c._id as Id<"customers">, c.name)}
                 className="w-full text-left px-3 py-2.5 rounded-md hover:bg-[#F7F7F7] border border-[#E0E0E0] transition-colors"
               >
-                <p className="text-sm font-medium text-[#685b8a]">{c.name}</p>
-                <p className="text-sm text-[#6B6B6B]">{c.phone} · {c.loyaltyPoints} pts</p>
+                <p className="text-sm font-medium text-[#1E1B3A]">{c.name}</p>
+                <p className="text-sm text-[#6B6B6B]">{c.phone} � {c.loyaltyPoints} pts</p>
               </button>
             ))}
             {debouncedSearch.length >= 2 && results.length === 0 && (

@@ -44,7 +44,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
           <div className="flex-1 relative max-w-md hidden sm:block">
             <input
               placeholder="Search products, invoices, customers..."
-              className="w-full h-9 pl-4 pr-10 border border-[#E0E0E0] rounded-md text-sm bg-white outline-none focus:border-[#685b8a] placeholder:text-[#9B9B9B]"
+              className="w-full h-9 pl-4 pr-10 border border-[#E0E0E0] rounded-md text-sm bg-white outline-none focus:border-[#1E1B3A] placeholder:text-[#9B9B9B]"
             />
             <Search size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9B9B9B] pointer-events-none" />
           </div>
@@ -61,7 +61,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
               <Settings size={19} />
             </button>
             <div className="flex items-center gap-2 pl-2 ml-1 border-l border-[#E0E0E0]">
-              <div className="w-8 h-8 rounded-full bg-[#685b8a] text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#1E1B3A] text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
                 {initials}
               </div>
               <div className="hidden sm:block leading-tight">
@@ -76,7 +76,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         <div className="flex-1 p-4 md:p-6 max-w-[1400px] w-full">
           {title && (
             <div className="flex items-center justify-between mb-4 md:mb-6">
-              <h1 className="text-lg md:text-xl font-semibold text-[#685b8a] tracking-tight">
+              <h1 className="text-lg md:text-xl font-semibold text-[#1E1B3A] tracking-tight">
                 {title}
               </h1>
             </div>

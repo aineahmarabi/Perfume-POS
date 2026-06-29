@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -37,11 +37,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-[#685b8a] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#4e4369] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-[#1E1B3A] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#2D2A5E] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white border border-[#E0E0E0] text-[#685b8a] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-white border border-[#E0E0E0] text-[#1E1B3A] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-danger {
@@ -57,7 +57,7 @@
   }
 
   .input-base {
-    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#685b8a] focus:ring-1 focus:ring-[#685b8a] outline-none transition-all duration-150 w-full text-[#685b8a] placeholder:text-[#9B9B9B];
+    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#1E1B3A] focus:ring-1 focus:ring-[#1E1B3A] outline-none transition-all duration-150 w-full text-[#1E1B3A] placeholder:text-[#9B9B9B];
   }
 
   .table-header {

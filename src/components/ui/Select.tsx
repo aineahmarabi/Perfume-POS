@@ -1,4 +1,4 @@
-﻿import { forwardRef } from "react";
+import { forwardRef } from "react";
 import type { SelectHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { ChevronDown } from "lucide-react";
@@ -28,7 +28,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             ref={ref}
             className={cn(
-              "h-10 px-3 pr-8 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#685b8a] focus:ring-1 focus:ring-[#685b8a] outline-none transition-all duration-150 w-full text-[#685b8a] appearance-none",
+              "h-10 px-3 pr-8 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#1E1B3A] focus:ring-1 focus:ring-[#1E1B3A] outline-none transition-all duration-150 w-full text-[#1E1B3A] appearance-none",
               error && "border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]",
             )}
             {...props}

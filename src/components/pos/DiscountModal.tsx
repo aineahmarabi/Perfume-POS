@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -63,7 +63,7 @@ export function DiscountModal({
             onClick={() => setType("percent")}
             className={`flex-1 h-10 rounded-md border text-sm font-medium transition-colors ${
               type === "percent"
-                ? "bg-[#685b8a] text-white border-[#685b8a]"
+                ? "bg-[#1E1B3A] text-white border-[#1E1B3A]"
                 : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:bg-[#F7F7F7]"
             }`}
           >
@@ -73,7 +73,7 @@ export function DiscountModal({
             onClick={() => setType("flat")}
             className={`flex-1 h-10 rounded-md border text-sm font-medium transition-colors ${
               type === "flat"
-                ? "bg-[#685b8a] text-white border-[#685b8a]"
+                ? "bg-[#1E1B3A] text-white border-[#1E1B3A]"
                 : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:bg-[#F7F7F7]"
             }`}
           >
@@ -103,7 +103,7 @@ export function DiscountModal({
               <span>Discount</span>
               <span className="font-mono">-{formatCurrency(previewAmount)}</span>
             </div>
-            <div className="flex justify-between text-[#685b8a] font-semibold mt-1 pt-1 border-t border-[#E0E0E0]">
+            <div className="flex justify-between text-[#1E1B3A] font-semibold mt-1 pt-1 border-t border-[#E0E0E0]">
               <span>After Discount</span>
               <span className="font-mono">{formatCurrency(subtotal - previewAmount)}</span>
             </div>

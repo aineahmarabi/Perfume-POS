@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -52,7 +52,7 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = "md", class
             <X size={20} />
           </button>
           {title && (
-            <h2 className="flex-1 text-center text-sm font-semibold text-[#685b8a] pr-8">
+            <h2 className="flex-1 text-center text-sm font-semibold text-[#1E1B3A] pr-8">
               {title}
             </h2>
           )}
@@ -78,7 +78,7 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = "md", class
         >
           {title && (
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#E0E0E0] flex-shrink-0">
-              <h2 className="text-sm font-semibold text-[#685b8a]">{title}</h2>
+              <h2 className="text-sm font-semibold text-[#1E1B3A]">{title}</h2>
               <button
                 onClick={onClose}
                 className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-[#F0F0F0] transition-colors"

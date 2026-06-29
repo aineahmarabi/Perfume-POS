@@ -1,4 +1,4 @@
-﻿import { Modal } from "./Modal";
+import { Modal } from "./Modal";
 import { Button } from "./Button";
 import { AlertTriangle } from "lucide-react";
 
@@ -32,7 +32,7 @@ export function ConfirmDialog({
           </div>
         )}
         <div>
-          <h3 className="text-sm font-semibold text-[#685b8a] mb-1">{title}</h3>
+          <h3 className="text-sm font-semibold text-[#1E1B3A] mb-1">{title}</h3>
           <p className="text-sm text-[#6B6B6B]">{message}</p>
         </div>
         <div className="flex gap-3 w-full">

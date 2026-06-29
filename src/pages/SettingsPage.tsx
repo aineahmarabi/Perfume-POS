@@ -1,4 +1,4 @@
-ï»¿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -41,9 +41,9 @@ export function SettingsPage() {
                 flexShrink: 0,
                 background: "none",
                 border: "none",
-                borderBottom: activeTab === tab.key ? "2px solid #685b8a" : "2px solid transparent",
+                borderBottom: activeTab === tab.key ? "2px solid #1E1B3A" : "2px solid transparent",
                 cursor: "pointer",
-                color: activeTab === tab.key ? "#685b8a" : "#6B6B6B",
+                color: activeTab === tab.key ? "#1E1B3A" : "#6B6B6B",
                 marginBottom: "-1px",
                 outline: "none",
                 transition: "color 150ms",
@@ -107,7 +107,7 @@ function GeneralSettings() {
         <Input label="Tax Rate (e.g. 0.16 for 16%)" value={form.tax_rate} onChange={(e) => setForm({ ...form, tax_rate: e.target.value })} type="number" step="0.01" min="0" max="1" />
         <Select
           label="Tax Inclusive (prices include VAT)"
-          options={[{ value: "true", label: "Yes â€” prices include VAT" }, { value: "false", label: "No â€” VAT added on top" }]}
+          options={[{ value: "true", label: "Yes — prices include VAT" }, { value: "false", label: "No — VAT added on top" }]}
           value={form.tax_inclusive}
           onChange={(e) => setForm({ ...form, tax_inclusive: e.target.value })}
         />
@@ -164,14 +164,14 @@ function ReceiptSettings() {
       <div className="hidden md:block bg-[#F7F7F7] border border-[#E0E0E0] rounded-md p-4">
         <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B] mb-3">Receipt Preview</p>
         <div className="font-mono text-xs text-[#6B6B6B] space-y-1 leading-relaxed">
-          <p className="font-semibold text-center text-[#685b8a]">RECEIPT</p>
-          <p className="text-center">â€” â€” â€” â€” â€” â€” â€” â€” â€”</p>
+          <p className="font-semibold text-center text-[#1E1B3A]">RECEIPT</p>
+          <p className="text-center">— — — — — — — — —</p>
           <p>Item 1 x2 .......... KSh 800</p>
           <p>Item 2 x1 .......... KSh 450</p>
-          <p className="text-center">â€” â€” â€” â€” â€” â€” â€” â€” â€”</p>
+          <p className="text-center">— — — — — — — — —</p>
           <p className="font-semibold">Total ............. KSh 1,250</p>
           <p>VAT (16%) ........... KSh 172</p>
-          <p className="text-center">â€” â€” â€” â€” â€” â€” â€” â€” â€”</p>
+          <p className="text-center">— — — — — — — — —</p>
           <p className="text-center text-[#9B9B9B] text-xs mt-2">{form.receipt_footer || "Thank you for shopping with us!"}</p>
         </div>
       </div>
@@ -378,7 +378,7 @@ function UserManagement() {
           <Input label="Email *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} type="email" />
           <Input label="Phone (optional)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} type="tel" />
           <Select label="Role *" options={[{ value: "cashier", label: "Cashier" }, { value: "admin", label: "Admin" }]} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
-          <Input label="4-Digit PIN *" value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} type="password" placeholder="â€¢â€¢â€¢â€¢" maxLength={4} />
+          <Input label="4-Digit PIN *" value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value.replace(/\D/g, "").slice(0, 4) })} type="password" placeholder="••••" maxLength={4} />
           {formError && <p className="text-sm text-[#DC2626]">{formError}</p>}
           <div className="flex gap-2 pt-2">
             <Button variant="secondary" onClick={() => setShowModal(false)} className="flex-1">Cancel</Button>
@@ -389,7 +389,7 @@ function UserManagement() {
 
       <Modal isOpen={!!showPinReset} onClose={() => setShowPinReset(null)} title="Reset PIN" maxWidth="sm">
         <div className="space-y-3">
-          <Input label="New 4-Digit PIN" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))} type="password" placeholder="â€¢â€¢â€¢â€¢" maxLength={4} autoFocus />
+          <Input label="New 4-Digit PIN" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))} type="password" placeholder="••••" maxLength={4} autoFocus />
           <div className="flex gap-2 pt-2">
             <Button variant="secondary" onClick={() => setShowPinReset(null)} className="flex-1">Cancel</Button>
             <Button onClick={handlePinReset} loading={loading} disabled={newPin.length !== 4} className="flex-1">Reset PIN</Button>
@@ -464,7 +464,7 @@ function CatalogueSettings() {
           ) : (
             brands.map((b) => (
               <div key={b._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${b.isActive ? "text-[#685b8a]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
+                <span className={`text-sm font-medium ${b.isActive ? "text-[#1E1B3A]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
                 <button
                   onClick={() => toggleBrand(b)}
                   className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${b.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
@@ -498,7 +498,7 @@ function CatalogueSettings() {
           ) : (
             categories.map((c) => (
               <div key={c._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${c.isActive ? "text-[#685b8a]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
+                <span className={`text-sm font-medium ${c.isActive ? "text-[#1E1B3A]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
                 <button
                   onClick={() => toggleCategory(c)}
                   className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${c.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
