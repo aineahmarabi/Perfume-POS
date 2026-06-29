@@ -1,5 +1,6 @@
 import { query } from "./_generated/server";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 
 export const getDashboardStats = query({
   args: {},
@@ -376,7 +377,7 @@ export const getTopSellingProducts = query({
 
     return Promise.all(
       sorted.map(async (entry) => {
-        const variant = await ctx.db.get(entry.variantId as never);
+        const variant = await ctx.db.get(entry.variantId as Id<"productVariants">);
         const product = variant ? await ctx.db.get(variant.productId) : null;
         return {
           productName: entry.productName,
@@ -466,7 +467,7 @@ export const getLowStockDashboard = query({
         const product = await ctx.db.get(variant.productId);
         const brand = product ? await ctx.db.get(product.brandId) : null;
         return {
-          variantId: variant._id as unknown as string,
+          variantId: variant._id as string,
           productName: product?.name ?? "",
           brandName: brand?.name ?? "",
           sizeMl: variant.sizeMl,
