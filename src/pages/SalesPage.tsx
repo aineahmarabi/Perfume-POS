@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -156,7 +156,7 @@ export function SalesPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
-                  <button className="flex-1 text-sm text-[#1A8FD1] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
+                  <button className="flex-1 text-sm text-[#8B5A2B] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
                     View
                   </button>
                   {isAdmin && (
@@ -228,7 +228,7 @@ export function SalesPage() {
                   <p className="font-medium text-sm">{item.productName} {item.brandName} {item.sizeMl}ml</p>
                   <p className="text-xs text-[#9B9B9B] mb-2">{item.sku}</p>
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#9B9B9B]">Qty: {item.quantity} × {formatCurrency(item.unitPrice)}</span>
+                    <span className="text-[#9B9B9B]">Qty: {item.quantity} Ã— {formatCurrency(item.unitPrice)}</span>
                     <span className="font-mono font-semibold">{formatCurrency(item.lineTotal)}</span>
                   </div>
                 </div>

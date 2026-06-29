@@ -96,9 +96,9 @@ export function InventoryPage() {
                 flexShrink: 0,
                 background: "none",
                 border: "none",
-                borderBottom: activeTab === tab.key ? "2px solid #1A8FD1" : "2px solid transparent",
+                borderBottom: activeTab === tab.key ? "2px solid #8B5A2B" : "2px solid transparent",
                 cursor: "pointer",
-                color: activeTab === tab.key ? "#1A8FD1" : "#6B6B6B",
+                color: activeTab === tab.key ? "#8B5A2B" : "#6B6B6B",
                 marginBottom: "-1px",
                 outline: "none",
                 display: "flex",
@@ -179,7 +179,7 @@ export function InventoryPage() {
                   <div key={v._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-medium text-sm text-[#1A8FD1] truncate">{v.productName}</p>
+                        <p className="font-medium text-sm text-[#8B5A2B] truncate">{v.productName}</p>
                         <p className="text-xs text-[#9B9B9B]">{v.brandName} Â· {v.sizeMl}ml</p>
                         <p className="text-xs font-mono text-[#9B9B9B] mt-0.5">{v.sku}</p>
                       </div>
@@ -261,7 +261,7 @@ export function InventoryPage() {
                   <div key={v._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-medium text-sm text-[#1A8FD1]">{v.productName} {v.sizeMl}ml</p>
+                        <p className="font-medium text-sm text-[#8B5A2B]">{v.productName} {v.sizeMl}ml</p>
                         <p className="text-xs text-[#9B9B9B]">{v.brandName} Â· {v.sku}</p>
                       </div>
                       <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
@@ -345,7 +345,7 @@ export function InventoryPage() {
                     : null;
                   return (
                     <div key={v._id} className="bg-white border border-[#E0E0E0] rounded-md p-4">
-                      <p className="font-medium text-sm text-[#1A8FD1]">{v.productName} {v.sizeMl}ml</p>
+                      <p className="font-medium text-sm text-[#8B5A2B]">{v.productName} {v.sizeMl}ml</p>
                       <p className="text-xs text-[#9B9B9B] mt-0.5">{v.brandName} Â· {v.sku}</p>
                       <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#F0F0F0] text-xs text-center">
                         <div>

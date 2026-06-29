@@ -62,13 +62,13 @@ export function BottomNav() {
                   )}>
                     <div className={cn(
                       "w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-4 border-white transition-colors",
-                      isActive ? "bg-[#1570A8]" : "bg-[#1A8FD1]"
+                      isActive ? "bg-[#6F4520]" : "bg-[#8B5A2B]"
                     )}>
                       <item.icon size={24} strokeWidth={2} className="text-white" />
                     </div>
                     <span className={cn(
                       "text-[11px] font-semibold mt-1",
-                      isActive ? "text-[#1A8FD1]" : "text-[#9B9B9B]"
+                      isActive ? "text-[#8B5A2B]" : "text-[#9B9B9B]"
                     )}>
                       {item.label}
                     </span>
@@ -85,7 +85,7 @@ export function BottomNav() {
               className={({ isActive }) =>
                 cn(
                   "flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
-                  isActive ? "text-[#1A8FD1]" : "text-[#9B9B9B]"
+                  isActive ? "text-[#8B5A2B]" : "text-[#9B9B9B]"
                 )
               }
             >
@@ -104,7 +104,7 @@ export function BottomNav() {
           onClick={() => setShowMore(true)}
           className={cn(
             "flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
-            showMore ? "text-[#1A8FD1]" : "text-[#9B9B9B]"
+            showMore ? "text-[#8B5A2B]" : "text-[#9B9B9B]"
           )}
         >
           <MoreHorizontal size={20} strokeWidth={1.5} />
@@ -126,13 +126,13 @@ export function BottomNav() {
             {/* Handle + header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#1A8FD1] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#8B5A2B] flex items-center justify-center">
                   <span className="text-sm font-bold text-white">
                     {user?.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#1A8FD1]">{user?.name}</p>
+                  <p className="text-sm font-semibold text-[#8B5A2B]">{user?.name}</p>
                   <p className="text-sm text-[#9B9B9B] capitalize">{user?.role}</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export function BottomNav() {
                     cn(
                       "flex flex-col items-center gap-1.5 p-3 rounded-xl text-center transition-colors",
                       isActive
-                        ? "bg-[#1A8FD1]/10 text-[#1A8FD1]"
+                        ? "bg-[#8B5A2B]/10 text-[#8B5A2B]"
                         : "bg-[#F7F7F7] text-[#6B6B6B] hover:bg-[#F0F0F0]"
                     )
                   }
