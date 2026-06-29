@@ -7,13 +7,11 @@ import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from ".
 import { SearchInput } from "../components/ui/SearchInput";
 import { Select } from "../components/ui/Select";
 import { Input } from "../components/ui/Input";
-import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { Badge, StatusBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
 import { SkeletonTable } from "../components/ui/Skeleton";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
-
 import { formatCurrency, formatDateTime } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
 import { Receipt } from "lucide-react";
@@ -26,10 +24,6 @@ export function SalesPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedSale, setSelectedSale] = useState<string | null>(null);
-  const [voidId, setVoidId] = useState<string | null>(null);
-  const [voidReason, setVoidReason] = useState("");
-  const [voidLoading, setVoidLoading] = useState(false);
-  const [voidError, setVoidError] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -43,32 +37,12 @@ export function SalesPage() {
   });
 
   const saleDetail = useQuery(api.sales.get, selectedSale ? { id: selectedSale as Id<"sales"> } : "skip");
-  const voidSale = useMutation(api.sales.voidSale);
   const deleteSale = useMutation(api.sales.deleteSale);
 
   const filtered = (salesQuery ?? []).filter((s) => {
     const q = search.toLowerCase();
     return !q || s.saleNumber.toLowerCase().includes(q);
   });
-
-  const handleVoid = async () => {
-    if (!voidId || !voidReason.trim() || !user) return;
-    setVoidLoading(true);
-    setVoidError("");
-    try {
-      await voidSale({
-        saleId: voidId as Id<"sales">,
-        voidReason: voidReason.trim(),
-        performedBy: user._id,
-      });
-      setVoidId(null);
-      setVoidReason("");
-    } catch (e: unknown) {
-      setVoidError(e instanceof Error ? e.message : "Void failed");
-    } finally {
-      setVoidLoading(false);
-    }
-  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -85,12 +59,12 @@ export function SalesPage() {
 
   return (
     <AdminLayout title="Sales History">
-      {/* Filters — stacked on mobile, row on desktop */}
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 mb-4">
         <SearchInput placeholder="Search by sale number..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:w-48" />
         <div className="flex gap-2">
           <Select
-            options={[{ value: "", label: "All Statuses" }, { value: "completed", label: "Completed" }, { value: "voided", label: "Voided" }, { value: "on_hold", label: "On Hold" }]}
+            options={[{ value: "", label: "All Statuses" }, { value: "completed", label: "Completed" }, { value: "on_hold", label: "On Hold" }]}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="flex-1 sm:w-36 sm:flex-none"
@@ -126,7 +100,7 @@ export function SalesPage() {
                   <TableHeader>Payment</TableHeader>
                   <TableHeader align="right">Total</TableHeader>
                   <TableHeader align="center">Status</TableHeader>
-                  <TableHeader align="center">Actions</TableHeader>
+                  {isAdmin && <TableHeader align="center">Actions</TableHeader>}
                 </tr>
               </TableHead>
               <TableBody>
@@ -140,26 +114,16 @@ export function SalesPage() {
                     <TableCell><span className="capitalize">{methodLabel[sale.paymentMethod] ?? sale.paymentMethod}</span></TableCell>
                     <TableCell align="right"><span className="font-mono font-semibold">{formatCurrency(sale.grandTotal)}</span></TableCell>
                     <TableCell align="center"><StatusBadge status={sale.status} /></TableCell>
-                    <TableCell align="center">
-                      {isAdmin && (
-                        <div className="flex items-center justify-center gap-2">
-                          {sale.status === "completed" && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}
-                              className="text-sm text-[#DC2626] hover:underline"
-                            >
-                              Void
-                            </button>
-                          )}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}
-                            className="text-sm text-[#9B9B9B] hover:text-[#DC2626] hover:underline"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </TableCell>
+                    {isAdmin && (
+                      <TableCell align="center">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}
+                          className="text-sm text-[#DC2626] hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -192,16 +156,11 @@ export function SalesPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
-                  <button className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
+                  <button className="flex-1 text-sm text-[#1A8FD1] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
                     View
                   </button>
-                  {isAdmin && sale.status === "completed" && (
-                    <button className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}>
-                      Void
-                    </button>
-                  )}
                   {isAdmin && (
-                    <button className="flex-1 text-sm text-[#9B9B9B] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}>
+                    <button className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}>
                       Delete
                     </button>
                   )}
@@ -213,7 +172,7 @@ export function SalesPage() {
       )}
 
       {/* Sale Detail Modal */}
-      <Modal isOpen={!!selectedSale && !voidId} onClose={() => setSelectedSale(null)} title="Sale Detail" maxWidth="lg">
+      <Modal isOpen={!!selectedSale} onClose={() => setSelectedSale(null)} title="Sale Detail" maxWidth="lg">
         {saleDetail && (
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -261,6 +220,7 @@ export function SalesPage() {
                 </TableBody>
               </Table>
             </div>
+
             {/* Mobile items cards */}
             <div className="sm:hidden space-y-2">
               {saleDetail.items.map((item, i) => (
@@ -281,12 +241,6 @@ export function SalesPage() {
               <div className="flex justify-between"><span className="text-[#6B6B6B]">VAT</span><span className="font-mono">{formatCurrency(saleDetail.taxAmount)}</span></div>
               <div className="flex justify-between font-semibold text-sm pt-1 border-t border-[#E0E0E0]"><span>Grand Total</span><span className="font-mono">{formatCurrency(saleDetail.grandTotal)}</span></div>
             </div>
-
-            {saleDetail.voidReason && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-[#DC2626]">
-                Void reason: {saleDetail.voidReason}
-              </div>
-            )}
           </div>
         )}
       </Modal>
@@ -300,28 +254,6 @@ export function SalesPage() {
         confirmLabel="Delete"
         loading={deleteLoading}
       />
-
-      {/* Void Sale */}
-      <Modal isOpen={!!voidId} onClose={() => setVoidId(null)} title="Void Sale" maxWidth="sm">
-        <div className="space-y-4">
-          <p className="text-sm text-[#6B6B6B]">This will reverse stock and mark the sale as voided.</p>
-          <Input
-            label="Void Reason *"
-            placeholder="Reason for voiding this sale..."
-            value={voidReason}
-            onChange={(e) => setVoidReason(e.target.value)}
-            autoFocus
-          />
-          {voidError && <p className="text-sm text-[#DC2626]">{voidError}</p>}
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setVoidId(null)} className="flex-1">Cancel</Button>
-            <Button variant="danger" onClick={handleVoid} loading={voidLoading} disabled={!voidReason.trim()} className="flex-1">
-              Void Sale
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </AdminLayout>
   );
 }
-
