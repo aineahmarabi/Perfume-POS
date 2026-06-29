@@ -51,9 +51,9 @@ export function ReportsPage() {
                 flexShrink: 0,
                 background: "none",
                 border: "none",
-                borderBottom: activeTab === tab.key ? "2px solid #3432a8" : "2px solid transparent",
+                borderBottom: activeTab === tab.key ? "2px solid #685b8a" : "2px solid transparent",
                 cursor: "pointer",
-                color: activeTab === tab.key ? "#3432a8" : "#6B6B6B",
+                color: activeTab === tab.key ? "#685b8a" : "#6B6B6B",
                 marginBottom: "-1px",
                 outline: "none",
                 transition: "color 150ms",
@@ -271,7 +271,7 @@ function PaymentReport() {
   }
   const total = Object.values(breakdown).reduce((a, b) => a + b, 0);
   const chartData = Object.entries(breakdown).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }));
-  const COLORS = ["#3432a8", "#16A34A", "#2563EB", "#D97706"];
+  const COLORS = ["#685b8a", "#16A34A", "#2563EB", "#D97706"];
 
   return (
     <div>
@@ -358,7 +358,7 @@ function StaffReport() {
                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#6B6B6B" }} />
                 <YAxis tick={{ fontSize: 11, fill: "#6B6B6B" }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(v) => formatCurrency(Number(v))} contentStyle={{ fontSize: 12, border: "1px solid #E0E0E0", borderRadius: 4 }} />
-                <Bar dataKey="revenue" fill="#3432a8" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="revenue" fill="#685b8a" radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

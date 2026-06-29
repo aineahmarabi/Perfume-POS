@@ -156,7 +156,7 @@ export function SalesPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
-                  <button className="flex-1 text-sm text-[#3432a8] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
+                  <button className="flex-1 text-sm text-[#685b8a] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
                     View
                   </button>
                   {isAdmin && (

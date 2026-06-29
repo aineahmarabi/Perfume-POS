@@ -111,7 +111,7 @@ export function POSPage() {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden pb-0 md:pb-0">
       {/* POS Header */}
-      <header className="h-14 bg-[#3432a8] text-white flex items-center px-4 gap-3 flex-shrink-0">
+      <header className="h-14 bg-[#685b8a] text-white flex items-center px-4 gap-3 flex-shrink-0">
         {/* Brand */}
         <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
           <LayoutGrid size={16} />
@@ -197,7 +197,7 @@ export function POSPage() {
         {mobileTab === "products" && (
           <button
             onClick={() => setMobileTab("cart")}
-            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#3432a8] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
+            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#685b8a] text-white pl-4 pr-5 py-3 rounded-full shadow-lg text-sm font-semibold"
           >
             <ShoppingCart size={16} />
             {cart.items.length > 0 ? (

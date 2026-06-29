@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")!).render(
           position="top-right"
           toastOptions={{
             style: {
-              background: "#3432a8",
+              background: "#685b8a",
               color: "#FFFFFF",
               border: "none",
               borderRadius: "6px",

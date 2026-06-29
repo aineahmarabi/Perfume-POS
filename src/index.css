@@ -37,11 +37,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-[#3432a8] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#262485] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-[#685b8a] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#4e4369] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white border border-[#E0E0E0] text-[#3432a8] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-white border border-[#E0E0E0] text-[#685b8a] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-danger {
@@ -57,7 +57,7 @@
   }
 
   .input-base {
-    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#3432a8] focus:ring-1 focus:ring-[#3432a8] outline-none transition-all duration-150 w-full text-[#3432a8] placeholder:text-[#9B9B9B];
+    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#685b8a] focus:ring-1 focus:ring-[#685b8a] outline-none transition-all duration-150 w-full text-[#685b8a] placeholder:text-[#9B9B9B];
   }
 
   .table-header {

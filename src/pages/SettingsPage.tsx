@@ -41,9 +41,9 @@ export function SettingsPage() {
                 flexShrink: 0,
                 background: "none",
                 border: "none",
-                borderBottom: activeTab === tab.key ? "2px solid #3432a8" : "2px solid transparent",
+                borderBottom: activeTab === tab.key ? "2px solid #685b8a" : "2px solid transparent",
                 cursor: "pointer",
-                color: activeTab === tab.key ? "#3432a8" : "#6B6B6B",
+                color: activeTab === tab.key ? "#685b8a" : "#6B6B6B",
                 marginBottom: "-1px",
                 outline: "none",
                 transition: "color 150ms",
@@ -164,7 +164,7 @@ function ReceiptSettings() {
       <div className="hidden md:block bg-[#F7F7F7] border border-[#E0E0E0] rounded-md p-4">
         <p className="text-sm font-medium uppercase tracking-wider text-[#6B6B6B] mb-3">Receipt Preview</p>
         <div className="font-mono text-xs text-[#6B6B6B] space-y-1 leading-relaxed">
-          <p className="font-semibold text-center text-[#3432a8]">RECEIPT</p>
+          <p className="font-semibold text-center text-[#685b8a]">RECEIPT</p>
           <p className="text-center">— — — — — — — — —</p>
           <p>Item 1 x2 .......... KSh 800</p>
           <p>Item 2 x1 .......... KSh 450</p>
@@ -464,7 +464,7 @@ function CatalogueSettings() {
           ) : (
             brands.map((b) => (
               <div key={b._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${b.isActive ? "text-[#3432a8]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
+                <span className={`text-sm font-medium ${b.isActive ? "text-[#685b8a]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
                 <button
                   onClick={() => toggleBrand(b)}
                   className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${b.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
@@ -498,7 +498,7 @@ function CatalogueSettings() {
           ) : (
             categories.map((c) => (
               <div key={c._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${c.isActive ? "text-[#3432a8]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
+                <span className={`text-sm font-medium ${c.isActive ? "text-[#685b8a]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
                 <button
                   onClick={() => toggleCategory(c)}
                   className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${c.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}

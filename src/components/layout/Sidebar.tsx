@@ -47,7 +47,7 @@ export function Sidebar() {
   const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
-    <aside className="hidden md:flex w-60 bg-[#3432a8] fixed left-0 top-0 h-screen flex-col z-30">
+    <aside className="hidden md:flex w-60 bg-[#685b8a] fixed left-0 top-0 h-screen flex-col z-30">
       {/* Logo */}
       <div className="px-4 py-5 border-b border-white/20">
         <p className="text-sm font-bold text-white tracking-tight">{shopName}</p>
@@ -65,7 +65,7 @@ export function Sidebar() {
               cn(
                 "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100 mx-2 rounded-md",
                 isActive
-                  ? "bg-white text-[#3432a8] font-semibold shadow-sm"
+                  ? "bg-white text-[#685b8a] font-semibold shadow-sm"
                   : "text-white/80 hover:bg-white/15 hover:text-white"
               )
             }

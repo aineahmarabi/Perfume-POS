@@ -51,8 +51,8 @@ export function Tab({ value, children }: { value: string; children: ReactNode })
       className={cn(
         "px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors duration-150 whitespace-nowrap shrink-0",
         isActive
-          ? "border-[#3432a8] text-[#3432a8]"
-          : "border-transparent text-[#6B6B6B] hover:text-[#3432a8]"
+          ? "border-[#685b8a] text-[#685b8a]"
+          : "border-transparent text-[#6B6B6B] hover:text-[#685b8a]"
       )}
     >
       {children}
