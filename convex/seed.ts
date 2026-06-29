@@ -100,7 +100,7 @@ export const seedProducts = mutation({
           sizeMl: item.sizeMl,
           costPrice: 0,
           sellingPrice: item.sellingPrice,
-          stockQuantity: 0,
+          stockQuantity: 3,
           lowStockThreshold: 3,
           isTester: false,
           isActive: true,
@@ -112,6 +112,17 @@ export const seedProducts = mutation({
     }
 
     return { created };
+  },
+});
+
+export const setAllStockToThree = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const variants = await ctx.db.query("productVariants").collect();
+    for (const v of variants) {
+      await ctx.db.patch(v._id, { stockQuantity: 3 });
+    }
+    return { updated: variants.length };
   },
 });
 

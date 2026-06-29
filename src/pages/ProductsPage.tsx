@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -442,8 +442,8 @@ export function ProductsPage() {
               </TableHead>
               <TableBody>
                 {filtered.map((product) => (
-                  <>
-                    <TableRow key={product._id}>
+                  <Fragment key={product._id}>
+                    <TableRow>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <button
@@ -488,6 +488,7 @@ export function ProductsPage() {
                                 <span className="w-16">{v.sizeMl}ml</span>
                                 <span className="font-mono w-28">{formatCurrency(v.sellingPrice)}</span>
                                 <span className="w-20">Stock: {v.stockQuantity}</span>
+                                <span className="w-20 text-[#9B9B9B]">Min: {v.lowStockThreshold}</span>
                                 <StockBadge quantity={v.stockQuantity} threshold={v.lowStockThreshold} />
                                 {v.isTester && <Badge variant="info">Tester</Badge>}
                               </div>
@@ -496,7 +497,7 @@ export function ProductsPage() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </TableBody>
             </Table>
