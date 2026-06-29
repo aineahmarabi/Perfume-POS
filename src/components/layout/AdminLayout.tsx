@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -16,6 +16,17 @@ interface AdminLayoutProps {
 export function AdminLayout({ children, title }: AdminLayoutProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const settings = useQuery(api.settings.getAll);
+  const shopName = settings === undefined ? "" : (settings["shop_name"] ?? "Perfume POS");
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      navigate(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
 
   const liveUser = useQuery(
     api.users.getById,
@@ -35,13 +46,29 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       <main className="flex-1 min-h-screen md:ml-60 pb-20 md:pb-0 min-w-0 overflow-x-hidden flex flex-col">
         {/* Top header bar */}
         <header className="sticky top-0 z-20 bg-white border-b border-[#E0E0E0] h-14 px-4 md:px-6 flex items-center gap-3 flex-shrink-0">
-          {/* Search */}
+          {/* Desktop search */}
           <div className="flex-1 relative max-w-md hidden sm:block">
             <input
-              placeholder="Search products, invoices, customers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
+              placeholder="Search products... (Enter)"
               className="w-full h-9 pl-4 pr-10 border border-[#E0E0E0] rounded-md text-sm bg-white outline-none focus:border-[#1E1B3A] placeholder:text-[#9B9B9B]"
             />
             <Search size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9B9B9B] pointer-events-none" />
+          </div>
+
+          {/* Mobile: shop branding */}
+          <div className="flex-1 flex items-center gap-2 sm:hidden">
+            <div className="w-7 h-7 rounded-full bg-[#1E1B3A] overflow-hidden flex items-center justify-center flex-shrink-0">
+              <img
+                src="/Ethereal Dayo official Logo.png"
+                alt="Logo"
+                className="w-full h-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
+            </div>
+            <span className="text-sm font-semibold text-[#1E1B3A] tracking-tight truncate">{shopName}</span>
           </div>
 
           {/* Right side */}
