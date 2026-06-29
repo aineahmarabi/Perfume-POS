@@ -377,7 +377,7 @@ export const getTopSellingProducts = query({
 
     return Promise.all(
       sorted.map(async (entry) => {
-        const variant = await ctx.db.get(entry.variantId as Id<"productVariants">);
+        const variant = await ctx.db.get(entry.variantId as unknown as Id<"productVariants">);
         const product = variant ? await ctx.db.get(variant.productId) : null;
         return {
           productName: entry.productName,
