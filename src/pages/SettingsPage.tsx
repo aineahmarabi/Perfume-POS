@@ -455,9 +455,9 @@ function CatalogueSettings() {
   const brands = useQuery(api.brands.list, { activeOnly: false });
   const categories = useQuery(api.categories.list, { activeOnly: false });
   const createBrand = useMutation(api.brands.create);
-  const updateBrand = useMutation(api.brands.update);
+  const removeBrand = useMutation(api.brands.remove);
   const createCategory = useMutation(api.categories.create);
-  const updateCategory = useMutation(api.categories.update);
+  const removeCategory = useMutation(api.categories.remove);
 
   const [newBrand, setNewBrand] = useState("");
   const [newCategory, setNewCategory] = useState("");
@@ -480,14 +480,14 @@ function CatalogueSettings() {
     finally { setAddingCategory(false); }
   };
 
-  const toggleBrand = async (b: NonNullable<typeof brands>[0]) => {
-    await updateBrand({ id: b._id as Id<"brands">, name: b.name, isActive: !b.isActive });
-    toast.success(b.isActive ? "Brand deactivated" : "Brand activated");
+  const handleRemoveBrand = async (id: string) => {
+    await removeBrand({ id: id as Id<"brands"> });
+    toast.success("Brand deleted");
   };
 
-  const toggleCategory = async (c: NonNullable<typeof categories>[0]) => {
-    await updateCategory({ id: c._id as Id<"categories">, name: c.name, isActive: !c.isActive });
-    toast.success(c.isActive ? "Category deactivated" : "Category activated");
+  const handleRemoveCategory = async (id: string) => {
+    await removeCategory({ id: id as Id<"categories"> });
+    toast.success("Category deleted");
   };
 
   if (!brands || !categories) return <SkeletonTable rows={5} cols={3} />;
@@ -515,12 +515,12 @@ function CatalogueSettings() {
           ) : (
             brands.map((b) => (
               <div key={b._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${b.isActive ? "text-[#1E1B3A]" : "text-[#9B9B9B] line-through"}`}>{b.name}</span>
+                <span className="text-sm font-medium text-[#1E1B3A]">{b.name}</span>
                 <button
-                  onClick={() => toggleBrand(b)}
-                  className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${b.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
+                  onClick={() => handleRemoveBrand(b._id)}
+                  className="flex items-center gap-1 text-sm px-2 py-1 rounded text-[#DC2626] hover:bg-red-50 transition-colors"
                 >
-                  {b.isActive ? <><Trash2 size={12} /> Delete</> : "Restore"}
+                  <Trash2 size={12} /> Delete
                 </button>
               </div>
             ))
@@ -549,12 +549,12 @@ function CatalogueSettings() {
           ) : (
             categories.map((c) => (
               <div key={c._id} className="flex items-center justify-between px-4 py-2.5 border-b border-[#F0F0F0] last:border-0">
-                <span className={`text-sm font-medium ${c.isActive ? "text-[#1E1B3A]" : "text-[#9B9B9B] line-through"}`}>{c.name}</span>
+                <span className="text-sm font-medium text-[#1E1B3A]">{c.name}</span>
                 <button
-                  onClick={() => toggleCategory(c)}
-                  className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${c.isActive ? "text-[#DC2626] hover:bg-red-50" : "text-[#16A34A] hover:bg-green-50"}`}
+                  onClick={() => handleRemoveCategory(c._id)}
+                  className="flex items-center gap-1 text-sm px-2 py-1 rounded text-[#DC2626] hover:bg-red-50 transition-colors"
                 >
-                  {c.isActive ? <><Trash2 size={12} /> Delete</> : "Restore"}
+                  <Trash2 size={12} /> Delete
                 </button>
               </div>
             ))

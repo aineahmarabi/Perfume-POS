@@ -173,6 +173,8 @@ export function ProductsPage() {
   const createBrand = useMutation(api.brands.create);
   const createCategory = useMutation(api.categories.create);
   const bulkImport = useMutation(api.products.bulkImport);
+  const seedProducts = useMutation(api.seed.seedProducts);
+  const [seeding, setSeeding] = useState(false);
 
   // Bulk import state
   const [showImportModal, setShowImportModal] = useState(false);
@@ -384,7 +386,17 @@ export function ProductsPage() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-56"
           />
-          <div className="flex gap-2 w-full sm:w-auto">
+          <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+            {products?.length === 0 && (
+              <Button
+                variant="secondary"
+                onClick={async () => { setSeeding(true); try { await seedProducts({}); } finally { setSeeding(false); } }}
+                loading={seeding}
+                className="flex-1 sm:flex-none border-[#1E1B3A] text-[#1E1B3A]"
+              >
+                Load Catalogue
+              </Button>
+            )}
             <Button variant="secondary" onClick={() => { setShowImportModal(true); setImportRows([]); setImportError(""); setImportResult(null); }} className="flex-1 sm:flex-none">
               <Upload size={16} /> Import CSV
             </Button>

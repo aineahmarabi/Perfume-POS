@@ -39,6 +39,6 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("categories") },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { isActive: false });
+    await ctx.db.delete(args.id);
   },
 });
