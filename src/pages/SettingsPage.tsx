@@ -66,7 +66,7 @@ export function SettingsPage() {
 function GeneralSettings() {
   const settings = useQuery(api.settings.getAll);
   const setMultiple = useMutation(api.settings.setMultiple);
-  const [form, setForm] = useState({ shop_name: "", shop_phone: "", shop_address: "", tax_rate: "0.16", tax_inclusive: "true", low_stock_default: "5" });
+  const [form, setForm] = useState({ shop_name: "", shop_phone: "", shop_address: "", tax_rate: "0.16", tax_inclusive: "true", low_stock_default: "1" });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ function GeneralSettings() {
         shop_address: settings["shop_address"] ?? "",
         tax_rate: settings["tax_rate"] ?? "0.16",
         tax_inclusive: settings["tax_inclusive"] ?? "true",
-        low_stock_default: settings["low_stock_default"] ?? "5",
+        low_stock_default: settings["low_stock_default"] ?? "1",
       });
     }
   }, [settings]);
