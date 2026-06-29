@@ -40,7 +40,7 @@ interface SidebarProps {
 }
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
-  const { user, logout, isAdmin } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const settings = useQuery(api.settings.getAll);
   const shopName = settings === undefined ? "" : (settings["shop_name"] ?? "Perfume POS");
