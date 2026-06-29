@@ -9,7 +9,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
 import { StatusBadge } from "../components/ui/Badge";
-import { Plus, RefreshCw, Trash2 } from "lucide-react";
+import { Plus, RefreshCw, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../hooks/useAuth";
 import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
@@ -242,10 +242,13 @@ function UserManagement() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", role: "cashier", pin: "" });
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editUser, setEditUser] = useState<{ _id: string; name: string; email: string; phone: string; role: string; isActive: boolean } | null>(null);
+  const [editError, setEditError] = useState("");
 
   const { user: currentUser } = useAuth();
   const users = useQuery(api.users.list);
   const createUser = useMutation(api.users.create);
+  const updateUser = useMutation(api.users.update);
   const toggleActive = useMutation(api.users.toggleActive);
   const resetPin = useMutation(api.users.resetPin);
 
@@ -268,6 +271,32 @@ function UserManagement() {
       setForm({ name: "", email: "", phone: "", role: "cashier", pin: "" });
     } catch (e: unknown) {
       setFormError(e instanceof Error ? e.message : "Failed to create user");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = async () => {
+    if (!editUser) return;
+    if (!editUser.name.trim() || !editUser.email.trim()) {
+      setEditError("Name and email are required.");
+      return;
+    }
+    setLoading(true);
+    setEditError("");
+    try {
+      await updateUser({
+        id: editUser._id as Id<"users">,
+        name: editUser.name.trim(),
+        email: editUser.email.trim(),
+        phone: editUser.phone.trim() || undefined,
+        role: editUser.role as "admin" | "cashier",
+        isActive: editUser.isActive,
+      });
+      toast.success("User updated");
+      setEditUser(null);
+    } catch (e: unknown) {
+      setEditError(e instanceof Error ? e.message : "Failed to update user");
     } finally {
       setLoading(false);
     }
@@ -319,6 +348,9 @@ function UserManagement() {
                   <TableCell align="center"><StatusBadge status={u.isActive ? "active" : "inactive"} /></TableCell>
                   <TableCell align="center">
                     <div className="flex items-center justify-center gap-3">
+                      <button onClick={() => { setEditUser({ ...u, phone: u.phone ?? "" }); setEditError(""); }} className="text-sm text-[#1E1B3A] hover:underline flex items-center gap-1">
+                        <Pencil size={11} /> Edit
+                      </button>
                       <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="text-sm text-[#2563EB] hover:underline flex items-center gap-1">
                         <RefreshCw size={11} /> Reset PIN
                       </button>
@@ -330,7 +362,7 @@ function UserManagement() {
                           {u.isActive ? "Deactivate" : "Activate"}
                         </button>
                       )}
-                      {isSelf && <span className="text-xs text-[#9B9B9B]">You</span>}
+                      {isSelf && <span className="text-xs text-[#9B9B9B]">(you)</span>}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -355,6 +387,9 @@ function UserManagement() {
                 <StatusBadge status={u.isActive ? "active" : "inactive"} />
               </div>
               <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
+                <button onClick={() => { setEditUser({ ...u, phone: u.phone ?? "" }); setEditError(""); }} className="flex-1 text-sm text-[#1E1B3A] py-1.5 border border-[#E0E0E0] rounded-md flex items-center justify-center gap-1">
+                  <Pencil size={12} /> Edit
+                </button>
                 <button onClick={() => { setShowPinReset(u._id); setNewPin(""); }} className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md flex items-center justify-center gap-1">
                   <RefreshCw size={12} /> Reset PIN
                 </button>
@@ -395,6 +430,22 @@ function UserManagement() {
             <Button onClick={handlePinReset} loading={loading} disabled={newPin.length !== 4} className="flex-1">Reset PIN</Button>
           </div>
         </div>
+      </Modal>
+
+      <Modal isOpen={!!editUser} onClose={() => setEditUser(null)} title="Edit User" maxWidth="sm">
+        {editUser && (
+          <div className="space-y-3">
+            <Input label="Full Name *" value={editUser.name} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} autoFocus />
+            <Input label="Email *" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} type="email" />
+            <Input label="Phone (optional)" value={editUser.phone} onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })} type="tel" />
+            <Select label="Role *" options={[{ value: "cashier", label: "Cashier" }, { value: "admin", label: "Admin" }]} value={editUser.role} onChange={(e) => setEditUser({ ...editUser, role: e.target.value })} />
+            {editError && <p className="text-sm text-[#DC2626]">{editError}</p>}
+            <div className="flex gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setEditUser(null)} className="flex-1">Cancel</Button>
+              <Button onClick={handleEdit} loading={loading} className="flex-1">Save Changes</Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

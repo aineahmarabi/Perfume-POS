@@ -1,6 +1,9 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { Search, Menu, Settings } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { Sidebar } from "./Sidebar";
@@ -16,14 +19,16 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const initials = user?.name
-    ? user.name
-        .split(" ")
-        .map((w) => w[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : "A";
+  const liveUser = useQuery(
+    api.users.getById,
+    user?._id ? { id: user._id as Id<"users"> } : "skip"
+  );
+  const displayName = liveUser?.name ?? user?.name ?? "";
+  const displayRole = liveUser?.role ?? user?.role ?? "";
+
+  const initials = displayName
+    ? displayName.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "?";
 
   return (
     <div className="flex min-h-screen bg-[#F7F7F7]">
@@ -63,8 +68,8 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
                 {initials}
               </div>
               <div className="hidden sm:block leading-tight">
-                <p className="text-sm font-semibold text-[#0A0A0A] leading-none">{user?.name}</p>
-                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{user?.role}</p>
+                <p className="text-sm font-semibold text-[#0A0A0A] leading-none">{displayName}</p>
+                <p className="text-xs text-[#9B9B9B] capitalize mt-0.5">{displayRole}</p>
               </div>
             </div>
           </div>

@@ -153,7 +153,7 @@ export function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5 gap-2">
         <div>
           <h1 className="text-xl font-semibold text-[#0A0A0A]">
-            Welcome back, {user?.name ?? "Admin"}!
+            Welcome back, {user?.name}!
           </h1>
           <p className="text-sm text-[#6B6B6B] mt-0.5">
             Here's what's happening at your store today.
