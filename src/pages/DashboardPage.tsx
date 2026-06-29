@@ -66,29 +66,29 @@ function KpiCard({
 }) {
   const isPositive = change !== null && change >= 0;
   return (
-    <div className="bg-white border border-[#E0E0E0] rounded-md p-4 flex items-center gap-3">
+    <div className="bg-white border border-[#E0E0E0] rounded-md p-3 flex items-center gap-2.5">
       <div
-        className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+        className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
         style={{ backgroundColor: iconBg, color: iconColor }}
       >
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[11px] font-medium uppercase tracking-wider text-[#6B6B6B]">{label}</p>
-        <p className="text-lg font-bold font-mono text-[#0A0A0A] mt-0.5 truncate">{value}</p>
+        <p className="text-[10px] font-medium uppercase tracking-wider text-[#6B6B6B] truncate">{label}</p>
+        <p className="text-sm font-bold font-mono text-[#0A0A0A] mt-0.5 truncate">{value}</p>
         <div
-          className={`flex items-center gap-1 mt-0.5 ${
+          className={`flex items-center gap-1 mt-0.5 flex-wrap ${
             change === null ? "text-[#9B9B9B]" : isPositive ? "text-green-600" : "text-red-600"
           }`}
         >
           {change !== null ? (
             <>
-              {isPositive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-              <span className="text-xs font-medium">{Math.abs(change).toFixed(1)}%</span>
-              <span className="text-xs text-[#9B9B9B] ml-0.5">vs yesterday</span>
+              {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+              <span className="text-[10px] font-medium">{Math.abs(change).toFixed(1)}%</span>
+              <span className="text-[10px] text-[#9B9B9B]">vs yesterday</span>
             </>
           ) : (
-            <span className="text-xs">-</span>
+            <span className="text-[10px]">-</span>
           )}
         </div>
       </div>
