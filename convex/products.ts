@@ -93,7 +93,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("products") },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { isActive: false, updatedAt: Date.now() });
+    const variants = await ctx.db
+      .query("productVariants")
+      .withIndex("by_product", (q) => q.eq("productId", args.id))
+      .collect();
+    for (const variant of variants) {
+      await ctx.db.delete(variant._id);
+    }
+    await ctx.db.delete(args.id);
   },
 });
 

@@ -658,9 +658,9 @@ export function ProductsPage() {
         isOpen={!!deleteId}
         onClose={() => setDeleteId(null)}
         onConfirm={handleDelete}
-        title="Deactivate Product"
-        message="This will hide the product from the POS. Stock data is preserved."
-        confirmLabel="Deactivate"
+        title="Delete Product"
+        message="This will permanently delete the product and all its variants. This cannot be undone."
+        confirmLabel="Delete"
         loading={loading}
       />
 
