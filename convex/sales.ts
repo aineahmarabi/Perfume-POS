@@ -289,33 +289,6 @@ export const get = query({
 export const deleteSale = mutation({
   args: { saleId: v.id("sales") },
   handler: async (ctx, args) => {
-    const sale = await ctx.db.get(args.saleId);
-    if (!sale) throw new Error("Sale not found");
-
-    // For completed sales, restore stock and reverse customer stats
-    if (sale.status === "completed") {
-      for (const item of sale.items) {
-        const variant = await ctx.db.get(item.variantId);
-        if (!variant) continue;
-        await ctx.db.patch(item.variantId, {
-          stockQuantity: variant.stockQuantity + item.quantity,
-          updatedAt: Date.now(),
-        });
-      }
-      if (sale.customerId) {
-        const customer = await ctx.db.get(sale.customerId);
-        if (customer) {
-          const loyaltyToRemove = Math.floor(sale.grandTotal / 100);
-          await ctx.db.patch(sale.customerId, {
-            totalSpent: Math.max(0, customer.totalSpent - sale.grandTotal),
-            visitCount: Math.max(0, customer.visitCount - 1),
-            loyaltyPoints: Math.max(0, customer.loyaltyPoints - loyaltyToRemove),
-            updatedAt: Date.now(),
-          });
-        }
-      }
-    }
-
     await ctx.db.delete(args.saleId);
   },
 });

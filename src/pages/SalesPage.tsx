@@ -296,7 +296,7 @@ export function SalesPage() {
         onClose={() => setDeleteId(null)}
         onConfirm={handleDelete}
         title="Delete Sale"
-        message="This permanently removes the sale record. Stock will be restored if the sale was completed. This cannot be undone."
+        message="This will permanently delete this sale. It will be completely removed and cannot be recovered."
         confirmLabel="Delete"
         loading={deleteLoading}
       />
