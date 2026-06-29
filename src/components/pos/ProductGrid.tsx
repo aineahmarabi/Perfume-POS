@@ -166,7 +166,7 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
             <p className="text-sm text-[#6B6B6B]">No products found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="flex flex-col gap-1.5">
             {filtered.map((product) => {
               const activeVariants = product.variants.filter(
                 (v) => !v.isTester && v.isActive
@@ -182,40 +182,42 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
                     onClick={() => handleProductClick(product)}
                     disabled={isOutOfStock}
                     className={cn(
-                      "text-left p-3 rounded-md border transition-all duration-100",
+                      "text-left w-full flex items-center gap-3 p-2.5 rounded-md border transition-all duration-100",
                       isOutOfStock
                         ? "opacity-40 cursor-not-allowed bg-[#F7F7F7] border-[#E0E0E0]"
-                        : "bg-white border-[#E0E0E0] hover:border-[#1E1B3A] hover:shadow-sm active:scale-[0.98]"
+                        : "bg-white border-[#E0E0E0] hover:border-[#1E1B3A] hover:shadow-sm active:scale-[0.99]"
                     )}
                   >
-                    <div className="aspect-square bg-[#F7F7F7] rounded mb-2 flex items-center justify-center">
-                      {product.imageUrl ? (
-                        <img
-                          src={product.imageUrl}
-                          alt={product.name}
-                          className="h-full w-full object-contain rounded"
-                        />
-                      ) : (
-                        <Package size={24} className="text-[#9B9B9B]" strokeWidth={1.5} />
+                    {/* Image / placeholder */}
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-md bg-[#F7F7F7] flex items-center justify-center overflow-hidden">
+                      {product.imageUrl
+                        ? <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain p-0.5" />
+                        : <Package size={20} className="text-[#C0C0C0]" strokeWidth={1.5} />
+                      }
+                    </div>
+
+                    {/* Name + brand */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] text-[#9B9B9B] leading-none mb-0.5 truncate">{product.brandName}</p>
+                      <p className="text-sm font-medium text-[#1E1B3A] leading-tight truncate">{product.name}</p>
+                      {isOutOfStock && <span className="text-[10px] text-[#DC2626] font-medium">Out of Stock</span>}
+                      {!isOutOfStock && activeVariants.length > 1 && (
+                        <span className="text-[10px] text-[#2563EB]">{activeVariants.length} sizes</span>
                       )}
                     </div>
-                    <p className="text-sm text-[#9B9B9B] truncate">{product.brandName}</p>
-                    <p className="text-sm font-medium text-[#1E1B3A] leading-tight truncate">{product.name}</p>
-                    <p className="text-sm font-semibold font-mono tabular-nums text-[#1E1B3A] mt-1">
-                      {activeVariants.length > 1 ? "From " : ""}{formatCurrency(minPrice)}
-                    </p>
-                    {isOutOfStock && (
-                      <span className="text-sm text-[#DC2626] font-medium">Out of Stock</span>
-                    )}
-                    {!isOutOfStock && activeVariants.length > 1 && (
-                      <span className="text-sm text-[#2563EB]">{activeVariants.length} sizes</span>
-                    )}
+
+                    {/* Price */}
+                    <div className="flex-shrink-0 text-right">
+                      <p className="text-sm font-semibold font-mono tabular-nums text-[#1E1B3A]">
+                        {activeVariants.length > 1 ? "From " : ""}{formatCurrency(minPrice)}
+                      </p>
+                    </div>
                   </button>
 
-                  {/* Variant popover */}
+                  {/* Variant picker */}
                   {isExpanded && activeVariants.length > 1 && (
                     <div className="mt-1 bg-white border border-[#1E1B3A] rounded-md p-2 space-y-1 shadow-sm">
-                      <p className="text-sm font-medium text-[#6B6B6B] px-1 pb-1">Select size:</p>
+                      <p className="text-xs font-medium text-[#6B6B6B] px-1 pb-1">Select size:</p>
                       {activeVariants.map((v) => (
                         <button
                           key={v._id}
