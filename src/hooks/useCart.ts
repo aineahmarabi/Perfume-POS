@@ -1,4 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
 export interface CartItem {
@@ -24,6 +26,10 @@ export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [saleDiscount, setSaleDiscount] = useState<CartDiscount | null>(null);
   const [customerId, setCustomerId] = useState<Id<"customers"> | null>(null);
+
+  const settings = useQuery(api.settings.getAll);
+  const TAX_RATE = settings ? parseFloat(settings["tax_rate"] ?? "0") : 0;
+  const TAX_INCLUSIVE = settings ? settings["tax_inclusive"] === "true" : true;
 
   const addItem = useCallback(
     (item: Omit<CartItem, "quantity" | "discount" | "lineTotal">) => {
@@ -120,10 +126,17 @@ export function useCart() {
     const discountedSubtotal = subtotal - saleDiscountAmount;
     const discountTotal = itemDiscounts + saleDiscountAmount;
 
-    // Tax inclusive - VAT is included in the price
-    const TAX_RATE = 0.16;
-    const taxAmount = discountedSubtotal - discountedSubtotal / (1 + TAX_RATE);
-    const grandTotal = discountedSubtotal;
+    let taxAmount = 0;
+    let grandTotal = discountedSubtotal;
+    if (TAX_RATE > 0) {
+      if (TAX_INCLUSIVE) {
+        taxAmount = discountedSubtotal - discountedSubtotal / (1 + TAX_RATE);
+        grandTotal = discountedSubtotal;
+      } else {
+        taxAmount = discountedSubtotal * TAX_RATE;
+        grandTotal = discountedSubtotal + taxAmount;
+      }
+    }
 
     return {
       subtotal,
@@ -132,7 +145,7 @@ export function useCart() {
       taxAmount,
       grandTotal,
     };
-  }, [items, saleDiscount]);
+  }, [items, saleDiscount, TAX_RATE, TAX_INCLUSIVE]);
 
   return {
     items,

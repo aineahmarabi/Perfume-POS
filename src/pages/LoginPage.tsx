@@ -120,8 +120,8 @@ export function LoginPage() {
           <p className="text-sm text-[#9B9B9B] text-center mt-4">Verifying...</p>
         )}
 
-        <p className="text-sm text-[#9B9B9B] text-center mt-6">
-          Demo: Admin PIN 1234 | Cashier PIN 0000
+        <p className="text-center mt-6" style={{ fontFamily: "'Dancing Script', cursive", fontSize: "20px", color: "#1E1B3A", letterSpacing: "0.02em" }}>
+          EtherealDayo
         </p>
       </div>
     </div>
