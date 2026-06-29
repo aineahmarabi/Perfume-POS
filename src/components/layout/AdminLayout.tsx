@@ -1,10 +1,9 @@
-import { useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { Search, Menu, Settings } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { Sidebar } from "./Sidebar";
 import { BottomNav } from "./BottomNav";
@@ -15,7 +14,6 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, title }: AdminLayoutProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -32,19 +30,11 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-[#F7F7F7]">
-      <Sidebar mobileOpen={mobileMenuOpen} onMobileClose={() => setMobileMenuOpen(false)} />
+      <Sidebar />
 
-      <main className="flex-1 min-h-screen md:ml-60 pb-28 md:pb-0 min-w-0 overflow-x-hidden flex flex-col">
+      <main className="flex-1 min-h-screen md:ml-60 pb-20 md:pb-0 min-w-0 overflow-x-hidden flex flex-col">
         {/* Top header bar */}
         <header className="sticky top-0 z-20 bg-white border-b border-[#E0E0E0] h-14 px-4 md:px-6 flex items-center gap-3 flex-shrink-0">
-          {/* Hamburger - mobile only */}
-          <button
-            className="md:hidden p-1.5 rounded-md hover:bg-[#F0F0F0] text-[#6B6B6B] flex-shrink-0"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu size={20} />
-          </button>
-
           {/* Search */}
           <div className="flex-1 relative max-w-md hidden sm:block">
             <input

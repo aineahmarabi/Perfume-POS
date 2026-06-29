@@ -11,7 +11,6 @@ import {
   Settings,
   LogOut,
   LayoutDashboard,
-  X,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useAuth } from "../../hooks/useAuth";
@@ -34,12 +33,7 @@ const navItems: NavItem[] = [
   { label: "Settings", icon: Settings, path: "/settings", adminOnly: true },
 ];
 
-interface SidebarProps {
-  mobileOpen?: boolean;
-  onMobileClose?: () => void;
-}
-
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+export function Sidebar() {
   const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const settings = useQuery(api.settings.getAll);
@@ -53,28 +47,21 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
-    <div className="flex flex-col h-full">
+    <aside className="hidden md:flex w-60 bg-[#1E1B3A] fixed left-0 top-0 h-screen flex-col z-30">
       {/* Logo / shop header */}
-      <div className="px-4 py-4 border-b border-white/20 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-white/20 overflow-hidden flex-shrink-0 flex items-center justify-center">
-            <img
-              src="/Ethereal Dayo official Logo.png"
-              alt="Logo"
-              className="w-full h-full object-cover"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white leading-tight tracking-tight">{shopName}</p>
-            <p className="text-[10px] text-white/50 uppercase tracking-wider mt-0.5">Perfume Store</p>
-          </div>
+      <div className="px-4 py-4 border-b border-white/20 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-white/20 overflow-hidden flex-shrink-0 flex items-center justify-center">
+          <img
+            src="/Ethereal Dayo official Logo.png"
+            alt="Logo"
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
         </div>
-        {onClose && (
-          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-white/10 text-white/60 md:hidden">
-            <X size={18} />
-          </button>
-        )}
+        <div>
+          <p className="text-sm font-bold text-white leading-tight tracking-tight">{shopName}</p>
+          <p className="text-[10px] text-white/50 uppercase tracking-wider mt-0.5">Perfume Store</p>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -84,7 +71,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             key={item.path}
             to={item.path}
             end={item.path === "/"}
-            onClick={onClose}
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100 mx-2 rounded-md",
@@ -110,30 +96,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           Sign Out
         </button>
       </div>
-    </div>
-  );
-}
-
-export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
-  return (
-    <>
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 bg-[#1E1B3A] fixed left-0 top-0 h-screen flex-col z-30">
-        <SidebarContent />
-      </aside>
-
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="md:hidden">
-          <div
-            className="fixed inset-0 bg-black/40 z-40"
-            onClick={onMobileClose}
-          />
-          <aside className="fixed left-0 top-0 h-screen w-64 bg-[#1E1B3A] flex flex-col z-50">
-            <SidebarContent onClose={onMobileClose} />
-          </aside>
-        </div>
-      )}
-    </>
+    </aside>
   );
 }
