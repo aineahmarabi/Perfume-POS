@@ -9,7 +9,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
 import { StatusBadge } from "../components/ui/Badge";
-import { Plus, RefreshCw, Pencil } from "lucide-react";
+import { Plus, RefreshCw, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../hooks/useAuth";
 import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
