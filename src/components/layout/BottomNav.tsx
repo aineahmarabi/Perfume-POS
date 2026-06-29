@@ -7,9 +7,6 @@ import {
   Users,
   Package,
   Boxes,
-  Truck,
-  Building2,
-  DollarSign,
   BarChart3,
   Settings,
   LogOut,
@@ -29,9 +26,6 @@ const primaryItems: { label: string; icon: typeof ShoppingCart; path: string; ce
 const moreItems = [
   { label: "Customers", icon: Users, path: "/customers", adminOnly: false },
   { label: "Inventory", icon: Boxes, path: "/inventory", adminOnly: false },
-  { label: "Purchases", icon: Truck, path: "/purchases", adminOnly: true },
-  { label: "Suppliers", icon: Building2, path: "/suppliers", adminOnly: true },
-  { label: "Expenses", icon: DollarSign, path: "/expenses", adminOnly: true },
   { label: "Reports", icon: BarChart3, path: "/reports", adminOnly: true },
   { label: "Settings", icon: Settings, path: "/settings", adminOnly: true },
 ];

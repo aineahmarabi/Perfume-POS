@@ -12,6 +12,7 @@ import { Modal } from "../components/ui/Modal";
 import { Badge, StatusBadge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
 import { SkeletonTable } from "../components/ui/Skeleton";
+import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 
 import { formatCurrency, formatDateTime } from "../lib/utils";
 import { useAuth } from "../hooks/useAuth";
@@ -29,6 +30,8 @@ export function SalesPage() {
   const [voidReason, setVoidReason] = useState("");
   const [voidLoading, setVoidLoading] = useState(false);
   const [voidError, setVoidError] = useState("");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const salesQuery = useQuery(api.sales.list, {
     cashierId: isAdmin ? undefined : (user?._id as Id<"users"> | undefined),
@@ -41,6 +44,7 @@ export function SalesPage() {
 
   const saleDetail = useQuery(api.sales.get, selectedSale ? { id: selectedSale as Id<"sales"> } : "skip");
   const voidSale = useMutation(api.sales.voidSale);
+  const deleteSale = useMutation(api.sales.deleteSale);
 
   const filtered = (salesQuery ?? []).filter((s) => {
     const q = search.toLowerCase();
@@ -63,6 +67,17 @@ export function SalesPage() {
       setVoidError(e instanceof Error ? e.message : "Void failed");
     } finally {
       setVoidLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await deleteSale({ saleId: deleteId as Id<"sales"> });
+      setDeleteId(null);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -126,13 +141,23 @@ export function SalesPage() {
                     <TableCell align="right"><span className="font-mono font-semibold">{formatCurrency(sale.grandTotal)}</span></TableCell>
                     <TableCell align="center"><StatusBadge status={sale.status} /></TableCell>
                     <TableCell align="center">
-                      {isAdmin && sale.status === "completed" && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}
-                          className="text-sm text-[#DC2626] hover:underline"
-                        >
-                          Void
-                        </button>
+                      {isAdmin && (
+                        <div className="flex items-center justify-center gap-2">
+                          {sale.status === "completed" && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}
+                              className="text-sm text-[#DC2626] hover:underline"
+                            >
+                              Void
+                            </button>
+                          )}
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}
+                            className="text-sm text-[#9B9B9B] hover:text-[#DC2626] hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       )}
                     </TableCell>
                   </TableRow>
@@ -168,11 +193,16 @@ export function SalesPage() {
                 </div>
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[#F0F0F0]">
                   <button className="flex-1 text-sm text-[#2563EB] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setSelectedSale(sale._id); }}>
-                    View Details
+                    View
                   </button>
                   {isAdmin && sale.status === "completed" && (
                     <button className="flex-1 text-sm text-[#DC2626] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setVoidId(sale._id); setVoidReason(""); setVoidError(""); }}>
                       Void
+                    </button>
+                  )}
+                  {isAdmin && (
+                    <button className="flex-1 text-sm text-[#9B9B9B] py-1.5 border border-[#E0E0E0] rounded-md" onClick={(e) => { e.stopPropagation(); setDeleteId(sale._id); }}>
+                      Delete
                     </button>
                   )}
                 </div>
@@ -260,6 +290,16 @@ export function SalesPage() {
           </div>
         )}
       </Modal>
+
+      <ConfirmDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Delete Sale"
+        message="This permanently removes the sale record. Stock will be restored if the sale was completed. This cannot be undone."
+        confirmLabel="Delete"
+        loading={deleteLoading}
+      />
 
       {/* Void Sale */}
       <Modal isOpen={!!voidId} onClose={() => setVoidId(null)} title="Void Sale" maxWidth="sm">

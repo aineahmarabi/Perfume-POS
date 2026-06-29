@@ -13,9 +13,94 @@ import { SearchInput } from "../components/ui/SearchInput";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { formatCurrency, generateSkuCode } from "../lib/utils";
-import { Plus, Edit, Trash2, ChevronDown, ChevronRight, Check, X } from "lucide-react";
+import { Plus, Edit, Trash2, ChevronDown, ChevronRight, Check, X, Upload, Download } from "lucide-react";
 import { ImageUpload } from "../components/ui/ImageUpload";
 import { SkeletonTable } from "../components/ui/Skeleton";
+
+interface ImportRow {
+  name: string;
+  brand: string;
+  category: string;
+  description?: string;
+  sku?: string;
+  barcode?: string;
+  sizeMl: number;
+  costPrice: number;
+  sellingPrice: number;
+  stockQuantity: number;
+  lowStockThreshold: number;
+  expiryDate?: number;
+  isTester: boolean;
+}
+
+const CSV_TEMPLATE_HEADERS = "name,brand,category,description,sku,sizeMl,costPrice,sellingPrice,stockQuantity,lowStockThreshold,barcode,expiryDate,isTester";
+const CSV_TEMPLATE_EXAMPLE = "Eros EDT,Versace,EDT,Fresh masculine scent,,100,2500,4500,10,5,,,false";
+
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '"') { inQuotes = !inQuotes; }
+    else if (line[i] === "," && !inQuotes) { result.push(current); current = ""; }
+    else { current += line[i]; }
+  }
+  result.push(current);
+  return result;
+}
+
+function parseCSV(text: string): { rows: ImportRow[]; errors: string[] } {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return { rows: [], errors: ["File must have a header row and at least one data row."] };
+  const headers = parseCSVLine(lines[0]).map((h) => h.trim().toLowerCase().replace(/\s/g, ""));
+  const rows: ImportRow[] = [];
+  const errors: string[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const vals = parseCSVLine(lines[i]).map((v) => v.trim());
+    const get = (col: string) => vals[headers.indexOf(col.toLowerCase())] ?? "";
+    const name = get("name");
+    const brand = get("brand");
+    const category = get("category");
+    const sizeMlVal = parseFloat(get("sizeMl") || get("sizeml")) || 0;
+    if (!name || !brand || !category) {
+      errors.push(`Row ${i + 1}: name, brand, and category are required.`);
+      continue;
+    }
+    if (sizeMlVal <= 0) {
+      errors.push(`Row ${i + 1}: sizeMl must be a positive number.`);
+      continue;
+    }
+    const expiryStr = get("expiryDate") || get("expirydate");
+    rows.push({
+      name,
+      brand,
+      category,
+      description: get("description") || undefined,
+      sku: get("sku") || undefined,
+      barcode: get("barcode") || undefined,
+      sizeMl: sizeMlVal,
+      costPrice: parseFloat(get("costPrice") || get("costprice")) || 0,
+      sellingPrice: parseFloat(get("sellingPrice") || get("sellingprice")) || 0,
+      stockQuantity: parseInt(get("stockQuantity") || get("stockquantity")) || 0,
+      lowStockThreshold: parseInt(get("lowStockThreshold") || get("lowstockthreshold")) || 5,
+      expiryDate: expiryStr ? new Date(expiryStr).getTime() : undefined,
+      isTester: (get("isTester") || get("istester")).toLowerCase() === "true",
+    });
+  }
+  return { rows, errors };
+}
+
+function downloadTemplate() {
+  const content = `${CSV_TEMPLATE_HEADERS}\n${CSV_TEMPLATE_EXAMPLE}`;
+  const blob = new Blob([content], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "products_import_template.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 interface VariantForm {
   id?: string;
@@ -87,6 +172,14 @@ export function ProductsPage() {
   const updateVariant = useMutation(api.products.updateVariant);
   const createBrand = useMutation(api.brands.create);
   const createCategory = useMutation(api.categories.create);
+  const bulkImport = useMutation(api.products.bulkImport);
+
+  // Bulk import state
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importRows, setImportRows] = useState<ImportRow[]>([]);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importError, setImportError] = useState("");
+  const [importResult, setImportResult] = useState<string | null>(null);
 
 
   const filtered = (products ?? []).filter((p) => {
@@ -243,6 +336,41 @@ export function ProductsPage() {
     }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportError("");
+    setImportResult(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      const { rows, errors } = parseCSV(text);
+      if (errors.length > 0) {
+        setImportError(errors.join("\n"));
+        setImportRows([]);
+      } else {
+        setImportRows(rows);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const handleImport = async () => {
+    if (importRows.length === 0) return;
+    setImportLoading(true);
+    setImportError("");
+    try {
+      const result = await bulkImport({ rows: importRows });
+      setImportResult(`Successfully imported ${result.imported} variant${result.imported !== 1 ? "s" : ""}.`);
+      setImportRows([]);
+    } catch (e: unknown) {
+      setImportError(e instanceof Error ? e.message : "Import failed");
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   const brandOptions = (brands ?? []).map((b) => ({ value: b._id, label: b.name }));
   const categoryOptions = (categories ?? []).map((c) => ({ value: c._id, label: c.name }));
 
@@ -256,9 +384,14 @@ export function ProductsPage() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-56"
           />
-          <Button onClick={openAdd} className="w-full sm:w-auto">
-            <Plus size={16} /> Add Product
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="secondary" onClick={() => { setShowImportModal(true); setImportRows([]); setImportError(""); setImportResult(null); }} className="flex-1 sm:flex-none">
+              <Upload size={16} /> Import CSV
+            </Button>
+            <Button onClick={openAdd} className="flex-1 sm:flex-none">
+              <Plus size={16} /> Add Product
+            </Button>
+          </div>
         </div>
         <div className="flex gap-2">
           <Select
@@ -530,6 +663,88 @@ export function ProductsPage() {
         confirmLabel="Deactivate"
         loading={loading}
       />
+
+      {/* Bulk Import Modal */}
+      <Modal isOpen={showImportModal} onClose={() => setShowImportModal(false)} title="Import Products from CSV" maxWidth="lg">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-[#6B6B6B]">Upload a CSV file to bulk-create products and variants.</p>
+            <button
+              onClick={downloadTemplate}
+              className="flex items-center gap-1 text-sm text-[#6B1A2A] hover:underline font-medium"
+            >
+              <Download size={14} /> Download Template
+            </button>
+          </div>
+
+          <div className="border-2 border-dashed border-[#E0E0E0] rounded-md p-6 text-center">
+            <Upload size={24} className="mx-auto text-[#9B9B9B] mb-2" />
+            <p className="text-sm text-[#6B6B6B] mb-2">Select a CSV file to import</p>
+            <label className="btn-primary px-4 py-2 text-sm cursor-pointer inline-block">
+              Choose File
+              <input type="file" accept=".csv,text/csv" className="hidden" onChange={handleFileSelect} />
+            </label>
+          </div>
+
+          <div className="bg-[#F7F7F7] rounded-md p-3 text-xs text-[#6B6B6B]">
+            <p className="font-medium mb-1">Required columns: <span className="font-mono">name, brand, category, sizeMl, sellingPrice</span></p>
+            <p>Optional: <span className="font-mono">description, sku, barcode, costPrice, stockQuantity, lowStockThreshold, expiryDate, isTester</span></p>
+            <p className="mt-1">Brands and categories are created automatically if they don't exist. One row = one variant.</p>
+          </div>
+
+          {importError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-[#DC2626] whitespace-pre-line">
+              {importError}
+            </div>
+          )}
+
+          {importResult && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-3 text-sm text-[#16A34A]">
+              {importResult}
+            </div>
+          )}
+
+          {importRows.length > 0 && (
+            <div>
+              <p className="text-sm font-medium text-[#6B6B6B] mb-2">{importRows.length} row{importRows.length !== 1 ? "s" : ""} ready to import</p>
+              <div className="border border-[#E0E0E0] rounded-md overflow-x-auto max-h-48">
+                <table className="w-full text-xs">
+                  <thead className="bg-[#F7F7F7]">
+                    <tr>
+                      {["Name", "Brand", "Category", "Size (ml)", "Cost", "Price", "Stock"].map((h) => (
+                        <th key={h} className="text-left px-3 py-2 font-medium text-[#6B6B6B] whitespace-nowrap">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {importRows.slice(0, 50).map((r, i) => (
+                      <tr key={i} className="border-t border-[#F0F0F0]">
+                        <td className="px-3 py-1.5 font-medium">{r.name}</td>
+                        <td className="px-3 py-1.5">{r.brand}</td>
+                        <td className="px-3 py-1.5">{r.category}</td>
+                        <td className="px-3 py-1.5">{r.sizeMl}</td>
+                        <td className="px-3 py-1.5">{r.costPrice}</td>
+                        <td className="px-3 py-1.5">{r.sellingPrice}</td>
+                        <td className="px-3 py-1.5">{r.stockQuantity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {importRows.length > 50 && (
+                  <p className="text-xs text-[#9B9B9B] px-3 py-2">…and {importRows.length - 50} more rows</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-2 pt-2">
+            <Button variant="secondary" onClick={() => setShowImportModal(false)} className="flex-1">Cancel</Button>
+            <Button onClick={handleImport} loading={importLoading} disabled={importRows.length === 0} className="flex-1">
+              Import {importRows.length > 0 ? `${importRows.length} Row${importRows.length !== 1 ? "s" : ""}` : ""}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </AdminLayout>
   );
 }

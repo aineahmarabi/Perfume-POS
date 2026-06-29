@@ -7,13 +7,10 @@ import {
   Boxes,
   Users,
   Receipt,
-  Truck,
-  Building2,
   BarChart3,
   Settings,
   LogOut,
   TrendingUp,
-  DollarSign,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useAuth } from "../../hooks/useAuth";
@@ -32,9 +29,6 @@ const navItems: NavItem[] = [
   { label: "Inventory", icon: Boxes, path: "/inventory" },
   { label: "Sales", icon: Receipt, path: "/sales" },
   { label: "Customers", icon: Users, path: "/customers" },
-  { label: "Purchases", icon: Truck, path: "/purchases", adminOnly: true },
-  { label: "Suppliers", icon: Building2, path: "/suppliers", adminOnly: true },
-  { label: "Expenses", icon: DollarSign, path: "/expenses", adminOnly: true },
   { label: "Reports", icon: BarChart3, path: "/reports", adminOnly: true },
   { label: "Settings", icon: Settings, path: "/settings", adminOnly: true },
 ];

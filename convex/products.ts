@@ -148,6 +148,104 @@ export const deleteVariant = mutation({
   },
 });
 
+export const bulkImport = mutation({
+  args: {
+    rows: v.array(v.object({
+      name: v.string(),
+      brand: v.string(),
+      category: v.string(),
+      description: v.optional(v.string()),
+      sku: v.optional(v.string()),
+      barcode: v.optional(v.string()),
+      sizeMl: v.number(),
+      costPrice: v.number(),
+      sellingPrice: v.number(),
+      stockQuantity: v.number(),
+      lowStockThreshold: v.number(),
+      expiryDate: v.optional(v.number()),
+      isTester: v.boolean(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const brandMap = new Map<string, string>();
+    const categoryMap = new Map<string, string>();
+    const productMap = new Map<string, string>();
+
+    for (const row of args.rows) {
+      // Brand
+      const brandSlug = toSlug(row.brand);
+      if (!brandMap.has(brandSlug)) {
+        const existing = await ctx.db.query("brands").withIndex("by_slug", (q) => q.eq("slug", brandSlug)).first();
+        if (existing) {
+          brandMap.set(brandSlug, existing._id);
+        } else {
+          const id = await ctx.db.insert("brands", { name: row.brand, slug: brandSlug, isActive: true, createdAt: Date.now() });
+          brandMap.set(brandSlug, id);
+        }
+      }
+      const brandId = brandMap.get(brandSlug)!;
+
+      // Category
+      const catSlug = toSlug(row.category);
+      if (!categoryMap.has(catSlug)) {
+        const existing = await ctx.db.query("categories").withIndex("by_slug", (q) => q.eq("slug", catSlug)).first();
+        if (existing) {
+          categoryMap.set(catSlug, existing._id);
+        } else {
+          const id = await ctx.db.insert("categories", { name: row.category, slug: catSlug, isActive: true, createdAt: Date.now() });
+          categoryMap.set(catSlug, id);
+        }
+      }
+      const categoryId = categoryMap.get(catSlug)!;
+
+      // Product (match by name+brand)
+      const productKey = `${row.name.toLowerCase().trim()}|${brandId}`;
+      if (!productMap.has(productKey)) {
+        const existing = await ctx.db.query("products").withIndex("by_brand", (q) => q.eq("brandId", brandId as never)).collect();
+        const found = existing.find((p) => p.name.toLowerCase() === row.name.toLowerCase().trim());
+        if (found) {
+          productMap.set(productKey, found._id);
+        } else {
+          const id = await ctx.db.insert("products", {
+            name: row.name,
+            brandId: brandId as never,
+            categoryId: categoryId as never,
+            description: row.description,
+            isActive: true,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+          productMap.set(productKey, id);
+        }
+      }
+      const productId = productMap.get(productKey)!;
+
+      const brandCode = row.brand.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
+      const nameCode = row.name.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+      const sku = row.sku || `${brandCode}-${nameCode}-${row.sizeMl}ML`;
+
+      await ctx.db.insert("productVariants", {
+        productId: productId as never,
+        sku,
+        barcode: row.barcode,
+        sizeMl: row.sizeMl,
+        costPrice: row.costPrice,
+        sellingPrice: row.sellingPrice,
+        stockQuantity: row.stockQuantity,
+        lowStockThreshold: row.lowStockThreshold,
+        expiryDate: row.expiryDate,
+        isTester: row.isTester,
+        isActive: true,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    }
+
+    return { imported: args.rows.length };
+  },
+});
+
 export const getVariantBySku = query({
   args: { sku: v.string() },
   handler: async (ctx, args) => {
