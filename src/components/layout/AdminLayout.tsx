@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { BottomNav } from "./BottomNav";
 
@@ -10,7 +10,7 @@ interface AdminLayoutProps {
 export function AdminLayout({ children, title }: AdminLayoutProps) {
   return (
     <div className="flex min-h-screen bg-[#F7F7F7]">
-      {/* Sidebar — desktop only */}
+      {/* Sidebar â€” desktop only */}
       <Sidebar />
 
       {/* Main content */}
@@ -18,7 +18,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         <div className="p-4 md:p-6 max-w-[1400px]">
           {title && (
             <div className="flex items-center justify-between mb-4 md:mb-6">
-              <h1 className="text-lg md:text-xl font-semibold text-[#6B1A2A] tracking-tight">
+              <h1 className="text-lg md:text-xl font-semibold text-[#1A8FD1] tracking-tight">
                 {title}
               </h1>
               <div className="w-10 h-10 rounded-full bg-white border border-[#E0E0E0] shadow-sm overflow-hidden flex-shrink-0">
@@ -34,7 +34,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         </div>
       </main>
 
-      {/* Bottom nav — mobile only */}
+      {/* Bottom nav â€” mobile only */}
       <BottomNav />
     </div>
   );

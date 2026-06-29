@@ -106,8 +106,8 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
             className={cn(
               "flex-shrink-0 px-3 py-1.5 text-sm font-medium rounded border transition-colors duration-100",
               selectedCategory === "all"
-                ? "bg-[#6B1A2A] text-white border-[#6B1A2A]"
-                : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:border-[#6B1A2A]"
+                ? "bg-[#1A8FD1] text-white border-[#1A8FD1]"
+                : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:border-[#1A8FD1]"
             )}
           >
             All
@@ -119,8 +119,8 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
               className={cn(
                 "flex-shrink-0 px-3 py-1.5 text-sm font-medium rounded border transition-colors duration-100",
                 selectedCategory === cat._id
-                  ? "bg-[#6B1A2A] text-white border-[#6B1A2A]"
-                  : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:border-[#6B1A2A]"
+                  ? "bg-[#1A8FD1] text-white border-[#1A8FD1]"
+                  : "bg-white text-[#6B6B6B] border-[#E0E0E0] hover:border-[#1A8FD1]"
               )}
             >
               {cat.name}
@@ -134,8 +134,8 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
               className={cn(
                 "flex-shrink-0 px-2.5 py-1 text-sm rounded border transition-colors duration-100",
                 selectedBrand === "all"
-                  ? "bg-[#F0F0F0] text-[#6B1A2A] border-[#E0E0E0] font-medium"
-                  : "bg-white text-[#9B9B9B] border-[#E0E0E0] hover:text-[#6B1A2A]"
+                  ? "bg-[#F0F0F0] text-[#1A8FD1] border-[#E0E0E0] font-medium"
+                  : "bg-white text-[#9B9B9B] border-[#E0E0E0] hover:text-[#1A8FD1]"
               )}
             >
               All Brands
@@ -147,8 +147,8 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
                 className={cn(
                   "flex-shrink-0 px-2.5 py-1 text-sm rounded border transition-colors duration-100",
                   selectedBrand === brand._id
-                    ? "bg-[#F0F0F0] text-[#6B1A2A] border-[#6B1A2A] font-medium"
-                    : "bg-white text-[#9B9B9B] border-[#E0E0E0] hover:text-[#6B1A2A]"
+                    ? "bg-[#F0F0F0] text-[#1A8FD1] border-[#1A8FD1] font-medium"
+                    : "bg-white text-[#9B9B9B] border-[#E0E0E0] hover:text-[#1A8FD1]"
                 )}
               >
                 {brand.name}
@@ -185,7 +185,7 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
                       "text-left p-3 rounded-md border transition-all duration-100",
                       isOutOfStock
                         ? "opacity-40 cursor-not-allowed bg-[#F7F7F7] border-[#E0E0E0]"
-                        : "bg-white border-[#E0E0E0] hover:border-[#6B1A2A] hover:shadow-sm active:scale-[0.98]"
+                        : "bg-white border-[#E0E0E0] hover:border-[#1A8FD1] hover:shadow-sm active:scale-[0.98]"
                     )}
                   >
                     <div className="aspect-square bg-[#F7F7F7] rounded mb-2 flex items-center justify-center">
@@ -200,8 +200,8 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
                       )}
                     </div>
                     <p className="text-sm text-[#9B9B9B] truncate">{product.brandName}</p>
-                    <p className="text-sm font-medium text-[#6B1A2A] leading-tight truncate">{product.name}</p>
-                    <p className="text-sm font-semibold font-mono tabular-nums text-[#6B1A2A] mt-1">
+                    <p className="text-sm font-medium text-[#1A8FD1] leading-tight truncate">{product.name}</p>
+                    <p className="text-sm font-semibold font-mono tabular-nums text-[#1A8FD1] mt-1">
                       {activeVariants.length > 1 ? "From " : ""}{formatCurrency(minPrice)}
                     </p>
                     {isOutOfStock && (
@@ -214,7 +214,7 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
 
                   {/* Variant popover */}
                   {isExpanded && activeVariants.length > 1 && (
-                    <div className="mt-1 bg-white border border-[#6B1A2A] rounded-md p-2 space-y-1 shadow-sm">
+                    <div className="mt-1 bg-white border border-[#1A8FD1] rounded-md p-2 space-y-1 shadow-sm">
                       <p className="text-sm font-medium text-[#6B6B6B] px-1 pb-1">Select size:</p>
                       {activeVariants.map((v) => (
                         <button

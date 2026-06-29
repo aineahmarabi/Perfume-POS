@@ -1,4 +1,4 @@
-﻿import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import {
@@ -37,7 +37,6 @@ export function Sidebar() {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const settings = useQuery(api.settings.getAll);
-  // undefined = still loading; show nothing until resolved to avoid flash
   const shopName = settings === undefined ? "" : (settings["shop_name"] ?? "Perfume POS");
 
   const handleLogout = () => {
@@ -48,11 +47,11 @@ export function Sidebar() {
   const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
-    <aside className="hidden md:flex w-60 bg-[#F7F7F7] border-r border-[#E0E0E0] fixed left-0 top-0 h-screen flex-col z-30">
+    <aside className="hidden md:flex w-60 bg-[#1A8FD1] fixed left-0 top-0 h-screen flex-col z-30">
       {/* Logo */}
-      <div className="px-4 py-4 border-b border-[#E0E0E0]">
-        <p className="text-sm font-semibold text-[#6B1A2A] tracking-tight">{shopName}</p>
-        <p className="text-sm text-[#9B9B9B] mt-0.5">{user?.name}</p>
+      <div className="px-4 py-5 border-b border-white/20">
+        <p className="text-sm font-bold text-white tracking-tight">{shopName}</p>
+        <p className="text-xs text-white/60 mt-0.5">{user?.name}</p>
       </div>
 
       {/* Navigation */}
@@ -64,10 +63,10 @@ export function Sidebar() {
             end={item.path === "/"}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100",
+                "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100 mx-2 rounded-md",
                 isActive
-                  ? "bg-white border-r-2 border-[#6B1A2A] text-[#6B1A2A] font-medium"
-                  : "text-[#6B6B6B] hover:bg-[#F0F0F0] hover:text-[#6B1A2A]"
+                  ? "bg-white text-[#1A8FD1] font-semibold shadow-sm"
+                  : "text-white/80 hover:bg-white/15 hover:text-white"
               )
             }
           >
@@ -78,10 +77,10 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-[#E0E0E0] p-3">
+      <div className="border-t border-white/20 p-3">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#6B6B6B] hover:bg-[#F0F0F0] hover:text-[#6B1A2A] rounded-md w-full transition-colors duration-100"
+          className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:bg-white/15 hover:text-white rounded-md w-full transition-colors duration-100"
         >
           <LogOut size={16} strokeWidth={1.5} />
           Sign Out

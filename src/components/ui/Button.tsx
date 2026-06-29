@@ -13,8 +13,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const base = "inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed select-none";
 
     const variants = {
-      primary: "bg-[#6B1A2A] text-white hover:bg-[#2a2a2a]",
-      secondary: "bg-white border border-[#E0E0E0] text-[#6B1A2A] hover:bg-[#F7F7F7]",
+      primary: "bg-[#1A8FD1] text-white hover:bg-[#2a2a2a]",
+      secondary: "bg-white border border-[#E0E0E0] text-[#1A8FD1] hover:bg-[#F7F7F7]",
       danger: "bg-[#DC2626] text-white hover:bg-[#b91c1c]",
       ghost: "bg-transparent text-[#6B6B6B] hover:bg-[#F0F0F0]",
     };

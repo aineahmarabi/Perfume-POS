@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={cn(
-              "h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#6B1A2A] focus:ring-1 focus:ring-[#6B1A2A] outline-none transition-all duration-150 w-full text-[#6B1A2A] placeholder:text-[#9B9B9B]",
+              "h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#1A8FD1] focus:ring-1 focus:ring-[#1A8FD1] outline-none transition-all duration-150 w-full text-[#1A8FD1] placeholder:text-[#9B9B9B]",
               leftIcon && "pl-9",
               rightIcon && "pr-9",
               error && "border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]",

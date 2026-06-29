@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+﻿import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")!).render(
           position="top-right"
           toastOptions={{
             style: {
-              background: "#6B1A2A",
+              background: "#1A8FD1",
               color: "#FFFFFF",
               border: "none",
               borderRadius: "6px",

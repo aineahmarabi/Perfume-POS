@@ -64,7 +64,7 @@ export function LoginPage() {
               className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="text-xl font-semibold text-[#6B1A2A] tracking-tight">{shopName}</h1>
+          <h1 className="text-xl font-semibold text-[#1A8FD1] tracking-tight">{shopName}</h1>
           <p className="text-sm text-[#6B6B6B] mt-1">Enter your PIN to continue</p>
         </div>
 
@@ -76,7 +76,7 @@ export function LoginPage() {
               className={cn(
                 "h-3 w-3 rounded-full border-2 transition-all duration-150",
                 pin.length > i
-                  ? "bg-[#6B1A2A] border-[#6B1A2A]"
+                  ? "bg-[#1A8FD1] border-[#1A8FD1]"
                   : "bg-transparent border-[#E0E0E0]"
               )}
             />
@@ -108,7 +108,7 @@ export function LoginPage() {
                 key={i}
                 onClick={() => handleDigit(d)}
                 disabled={loading || pin.length >= 4}
-                className="h-14 rounded-md text-xl font-medium text-[#6B1A2A] hover:bg-[#F7F7F7] active:bg-[#F0F0F0] border border-[#E0E0E0] transition-colors duration-100 disabled:opacity-30"
+                className="h-14 rounded-md text-xl font-medium text-[#1A8FD1] hover:bg-[#F7F7F7] active:bg-[#F0F0F0] border border-[#E0E0E0] transition-colors duration-100 disabled:opacity-30"
               >
                 {d}
               </button>

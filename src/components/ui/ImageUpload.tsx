@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+﻿import { useRef, useState } from "react";
 import { cn } from "../../lib/utils";
 import { Upload, X } from "lucide-react";
 
@@ -67,21 +67,21 @@ export function ImageUpload({ value, onChange, label = "Product Image" }: ImageU
           onClick={() => inputRef.current?.click()}
           className={cn(
             "border-2 border-dashed rounded-md p-5 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors",
-            dragging ? "border-[#6B1A2A] bg-[#6B1A2A]/5" : "border-[#E0E0E0] hover:border-[#6B1A2A] hover:bg-[#F7F7F7]"
+            dragging ? "border-[#1A8FD1] bg-[#1A8FD1]/5" : "border-[#E0E0E0] hover:border-[#1A8FD1] hover:bg-[#F7F7F7]"
           )}
         >
           <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
           {uploading ? (
-            <div className="w-7 h-7 border-2 border-[#6B1A2A] border-t-transparent rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-[#1A8FD1] border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
               <div className="w-9 h-9 rounded-full bg-[#F0F0F0] flex items-center justify-center">
-                <Upload size={16} className="text-[#6B1A2A]" />
+                <Upload size={16} className="text-[#1A8FD1]" />
               </div>
-              <p className="text-sm font-medium text-[#6B1A2A] text-center">
+              <p className="text-sm font-medium text-[#1A8FD1] text-center">
                 {dragging ? "Drop to upload" : "Drag & drop or click to upload"}
               </p>
-              <p className="text-sm text-[#9B9B9B]">PNG, JPG, WEBP — max 5MB</p>
+              <p className="text-sm text-[#9B9B9B]">PNG, JPG, WEBP â€” max 5MB</p>
             </>
           )}
         </div>

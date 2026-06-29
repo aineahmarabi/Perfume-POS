@@ -85,7 +85,7 @@ export function DashboardPage() {
                 formatter={(value) => [formatCurrency(Number(value)), "Revenue"]}
                 contentStyle={{ fontSize: 12, border: "1px solid #E0E0E0", borderRadius: 4 }}
               />
-              <Bar dataKey="revenue" fill="#6B1A2A" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="revenue" fill="#1A8FD1" radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -100,12 +100,12 @@ export function DashboardPage() {
               return (
                 <div key={method}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="capitalize text-[#6B1A2A]">{method}</span>
-                    <span className="font-mono text-[#6B1A2A]">{formatCurrencyShort(amount)}</span>
+                    <span className="capitalize text-[#1A8FD1]">{method}</span>
+                    <span className="font-mono text-[#1A8FD1]">{formatCurrencyShort(amount)}</span>
                   </div>
                   <div className="h-1.5 bg-[#F0F0F0] rounded-full">
                     <div
-                      className="h-1.5 bg-[#6B1A2A] rounded-full"
+                      className="h-1.5 bg-[#1A8FD1] rounded-full"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -127,7 +127,7 @@ export function DashboardPage() {
               {(lowStock ?? []).slice(0, 5).map((item) => (
                 <div key={item._id} className="flex items-center justify-between py-1.5 border-b border-[#F0F0F0] last:border-0">
                   <div>
-                    <p className="text-sm font-medium text-[#6B1A2A]">{item.productName} {item.sizeMl}ml</p>
+                    <p className="text-sm font-medium text-[#1A8FD1]">{item.productName} {item.sizeMl}ml</p>
                     <p className="text-sm text-[#9B9B9B]">{item.brandName} · {item.sku}</p>
                   </div>
                   <StockBadge quantity={item.stockQuantity} threshold={item.lowStockThreshold} />
@@ -147,7 +147,7 @@ export function DashboardPage() {
               {(recentSales ?? []).slice(0, 5).map((sale) => (
                 <div key={sale._id} className="flex items-center justify-between py-1.5 border-b border-[#F0F0F0] last:border-0">
                   <div>
-                    <p className="text-sm font-medium text-[#6B1A2A]">{sale.saleNumber}</p>
+                    <p className="text-sm font-medium text-[#1A8FD1]">{sale.saleNumber}</p>
                     <p className="text-sm text-[#9B9B9B]">{formatDateTime(sale.createdAt)}</p>
                   </div>
                   <div className="text-right">

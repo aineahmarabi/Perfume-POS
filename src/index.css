@@ -14,7 +14,7 @@
     font-size: 15px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #6B1A2A;
+    color: #1A2733;
     background: #FFFFFF;
   }
 
@@ -37,11 +37,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-[#6B1A2A] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#2a2a2a] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-[#1A8FD1] text-white h-10 px-4 rounded-md text-sm font-medium hover:bg-[#2a2a2a] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white border border-[#E0E0E0] text-[#6B1A2A] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-white border border-[#E0E0E0] text-[#1A8FD1] h-10 px-4 rounded-md text-sm font-medium hover:bg-[#F7F7F7] active:scale-[0.98] transition-all duration-150 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-danger {
@@ -57,7 +57,7 @@
   }
 
   .input-base {
-    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#6B1A2A] focus:ring-1 focus:ring-[#6B1A2A] outline-none transition-all duration-150 w-full text-[#6B1A2A] placeholder:text-[#9B9B9B];
+    @apply h-10 px-3 border border-[#E0E0E0] rounded-md text-sm bg-white focus:border-[#1A8FD1] focus:ring-1 focus:ring-[#1A8FD1] outline-none transition-all duration-150 w-full text-[#1A8FD1] placeholder:text-[#9B9B9B];
   }
 
   .table-header {
