@@ -1,4 +1,4 @@
-﻿import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import {
@@ -10,7 +10,9 @@ import {
   BarChart3,
   Settings,
   LogOut,
-  TrendingUp,
+  LayoutDashboard,
+  Lock,
+  X,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useAuth } from "../../hooks/useAuth";
@@ -23,7 +25,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", icon: TrendingUp, path: "/" },
+  { label: "Dashboard", icon: LayoutDashboard, path: "/" },
   { label: "POS", icon: ShoppingCart, path: "/pos" },
   { label: "Products", icon: Package, path: "/products" },
   { label: "Inventory", icon: Boxes, path: "/inventory" },
@@ -33,7 +35,12 @@ const navItems: NavItem[] = [
   { label: "Settings", icon: Settings, path: "/settings", adminOnly: true },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+function SidebarContent({ onClose }: { onClose?: () => void }) {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const settings = useQuery(api.settings.getAll);
@@ -44,14 +51,36 @@ export function Sidebar() {
     navigate("/login");
   };
 
+  const handleLockSession = () => {
+    logout();
+    navigate("/login");
+  };
+
   const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
-    <aside className="hidden md:flex w-60 bg-[#685b8a] fixed left-0 top-0 h-screen flex-col z-30">
-      {/* Logo */}
-      <div className="px-4 py-5 border-b border-white/20">
-        <p className="text-sm font-bold text-white tracking-tight">{shopName}</p>
-        <p className="text-xs text-white/60 mt-0.5">{user?.name}</p>
+    <div className="flex flex-col h-full">
+      {/* Logo / shop header */}
+      <div className="px-4 py-4 border-b border-white/20 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-white/20 overflow-hidden flex-shrink-0 flex items-center justify-center">
+            <img
+              src="/Ethereal Dayo official Logo.png"
+              alt="Logo"
+              className="w-full h-full object-cover"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-white leading-tight tracking-tight">{shopName}</p>
+            <p className="text-[10px] text-white/50 uppercase tracking-wider mt-0.5">Perfume Store</p>
+          </div>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-white/10 text-white/60 md:hidden">
+            <X size={18} />
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
@@ -61,6 +90,7 @@ export function Sidebar() {
             key={item.path}
             to={item.path}
             end={item.path === "/"}
+            onClick={onClose}
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100 mx-2 rounded-md",
@@ -76,7 +106,34 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
+      {/* Current session block */}
+      <div className="px-4 py-3 border-t border-white/20">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-white/40 mb-2">Current Session</p>
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-white">
+              {user?.name?.charAt(0).toUpperCase() ?? "A"}
+            </span>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-white leading-none">{user?.name ?? "Admin"}</p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+              <p className="text-xs text-white/60 capitalize">{user?.role ?? "cashier"}</p>
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-white/40 mb-2">POS Terminal 01</p>
+        <button
+          onClick={handleLockSession}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-white/70 border border-white/20 rounded-md hover:bg-white/10 hover:text-white transition-colors duration-100"
+        >
+          <Lock size={12} />
+          Lock Session
+        </button>
+      </div>
+
+      {/* Sign out */}
       <div className="border-t border-white/20 p-3">
         <button
           onClick={handleLogout}
@@ -86,6 +143,30 @@ export function Sidebar() {
           Sign Out
         </button>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-60 bg-[#685b8a] fixed left-0 top-0 h-screen flex-col z-30">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden">
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
+            onClick={onMobileClose}
+          />
+          <aside className="fixed left-0 top-0 h-screen w-64 bg-[#685b8a] flex flex-col z-50">
+            <SidebarContent onClose={onMobileClose} />
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

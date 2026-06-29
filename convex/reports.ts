@@ -229,3 +229,253 @@ export const getStaffReport = query({
     return Object.values(staffStats).sort((a, b) => b.revenue - a.revenue);
   },
 });
+
+export const getDashboardKPIs = query({
+  args: {},
+  handler: async (ctx) => {
+    const now = new Date();
+    const startOfToday = new Date(now);
+    startOfToday.setHours(0, 0, 0, 0);
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+
+    const allSales = await ctx.db.query("sales").collect();
+    const todaySales = allSales.filter(
+      (s) => s.createdAt >= startOfToday.getTime() && s.status === "completed"
+    );
+    const yesterdaySales = allSales.filter(
+      (s) =>
+        s.createdAt >= startOfYesterday.getTime() &&
+        s.createdAt < startOfToday.getTime() &&
+        s.status === "completed"
+    );
+
+    const todayRevenue = todaySales.reduce((sum, s) => sum + s.grandTotal, 0);
+    const yesterdayRevenue = yesterdaySales.reduce((sum, s) => sum + s.grandTotal, 0);
+    const todayTransactions = todaySales.length;
+    const yesterdayTransactions = yesterdaySales.length;
+    const todayItems = todaySales.reduce(
+      (sum, s) => sum + s.items.reduce((a, i) => a + i.quantity, 0),
+      0
+    );
+    const yesterdayItems = yesterdaySales.reduce(
+      (sum, s) => sum + s.items.reduce((a, i) => a + i.quantity, 0),
+      0
+    );
+
+    let todayCOGS = 0;
+    for (const sale of todaySales) {
+      for (const item of sale.items) {
+        const variant = await ctx.db.get(item.variantId);
+        if (variant) todayCOGS += variant.costPrice * item.quantity;
+      }
+    }
+    let yesterdayCOGS = 0;
+    for (const sale of yesterdaySales) {
+      for (const item of sale.items) {
+        const variant = await ctx.db.get(item.variantId);
+        if (variant) yesterdayCOGS += variant.costPrice * item.quantity;
+      }
+    }
+    const todayGrossProfit = todayRevenue - todayCOGS;
+
+    const pctChange = (today: number, yesterday: number): number | null => {
+      if (yesterday === 0) return today > 0 ? 100 : null;
+      return ((today - yesterday) / yesterday) * 100;
+    };
+
+    return {
+      revenue: { today: todayRevenue, pctChange: pctChange(todayRevenue, yesterdayRevenue) },
+      transactions: { today: todayTransactions, pctChange: pctChange(todayTransactions, yesterdayTransactions) },
+      items: { today: todayItems, pctChange: pctChange(todayItems, yesterdayItems) },
+      grossProfit: {
+        today: todayGrossProfit,
+        pctChange: pctChange(todayGrossProfit, yesterdayRevenue - yesterdayCOGS),
+      },
+    };
+  },
+});
+
+export const getRevenueByDayDashboard = query({
+  args: { period: v.union(v.literal("today"), v.literal("week"), v.literal("month")) },
+  handler: async (ctx, args) => {
+    const now = new Date();
+    const allSales = await ctx.db.query("sales").collect();
+    const completed = allSales.filter((s) => s.status === "completed");
+
+    if (args.period === "today") {
+      const startOfDay = new Date(now);
+      startOfDay.setHours(0, 0, 0, 0);
+      return Array.from({ length: 24 }, (_, h) => {
+        const start = new Date(startOfDay);
+        start.setHours(h);
+        const end = new Date(startOfDay);
+        end.setHours(h + 1);
+        const revenue = completed
+          .filter((s) => s.createdAt >= start.getTime() && s.createdAt < end.getTime())
+          .reduce((sum, s) => sum + s.grandTotal, 0);
+        return { date: `${String(h).padStart(2, "0")}:00`, revenue };
+      });
+    }
+
+    const days = args.period === "week" ? 7 : 30;
+    return Array.from({ length: days }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (days - 1 - i));
+      d.setHours(0, 0, 0, 0);
+      const next = new Date(d);
+      next.setDate(next.getDate() + 1);
+      const revenue = completed
+        .filter((s) => s.createdAt >= d.getTime() && s.createdAt < next.getTime())
+        .reduce((sum, s) => sum + s.grandTotal, 0);
+      return {
+        date:
+          args.period === "week"
+            ? d.toLocaleDateString("en-KE", { weekday: "short" })
+            : d.toLocaleDateString("en-KE", { month: "short", day: "numeric" }),
+        revenue,
+      };
+    });
+  },
+});
+
+export const getTopSellingProducts = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 5;
+    const allSales = await ctx.db.query("sales").collect();
+    const completed = allSales.filter((s) => s.status === "completed");
+
+    const stats: Record<
+      string,
+      { variantId: string; productName: string; brandName: string; sizeMl: number; sku: string; qtySold: number; revenue: number }
+    > = {};
+
+    for (const sale of completed) {
+      for (const item of sale.items) {
+        const key = item.variantId as unknown as string;
+        if (!stats[key]) {
+          stats[key] = {
+            variantId: key,
+            productName: item.productName,
+            brandName: item.brandName,
+            sizeMl: item.sizeMl,
+            sku: item.sku,
+            qtySold: 0,
+            revenue: 0,
+          };
+        }
+        stats[key].qtySold += item.quantity;
+        stats[key].revenue += item.lineTotal;
+      }
+    }
+
+    const sorted = Object.values(stats)
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, limit);
+
+    return Promise.all(
+      sorted.map(async (entry) => {
+        const variant = await ctx.db.get(entry.variantId as never);
+        const product = variant ? await ctx.db.get(variant.productId) : null;
+        return {
+          productName: entry.productName,
+          brandName: entry.brandName,
+          sizeMl: entry.sizeMl,
+          sku: entry.sku,
+          qtySold: entry.qtySold,
+          revenue: entry.revenue,
+          imageUrl: product?.imageUrl ?? null,
+        };
+      })
+    );
+  },
+});
+
+export const getSalesByCategory = query({
+  args: {},
+  handler: async (ctx) => {
+    const allSales = await ctx.db.query("sales").collect();
+    const completed = allSales.filter((s) => s.status === "completed");
+
+    const catRevenue: Record<string, { name: string; revenue: number }> = {};
+
+    for (const sale of completed) {
+      for (const item of sale.items) {
+        const variant = await ctx.db.get(item.variantId);
+        if (!variant) continue;
+        const product = await ctx.db.get(variant.productId);
+        if (!product) continue;
+        const category = await ctx.db.get(product.categoryId);
+        if (!category) continue;
+        const key = category._id as unknown as string;
+        if (!catRevenue[key]) catRevenue[key] = { name: category.name, revenue: 0 };
+        catRevenue[key].revenue += item.lineTotal;
+      }
+    }
+
+    const total = Object.values(catRevenue).reduce((s, c) => s + c.revenue, 0);
+    return Object.values(catRevenue)
+      .sort((a, b) => b.revenue - a.revenue)
+      .map((c) => ({
+        name: c.name,
+        revenue: c.revenue,
+        percentage: total > 0 ? (c.revenue / total) * 100 : 0,
+      }));
+  },
+});
+
+export const getPaymentSummaryToday = query({
+  args: {},
+  handler: async (ctx) => {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const allSales = await ctx.db.query("sales").collect();
+    const todaySales = allSales.filter(
+      (s) => s.createdAt >= startOfDay.getTime() && s.status === "completed"
+    );
+    const methods: Record<string, number> = { cash: 0, mpesa: 0, card: 0, split: 0 };
+    for (const sale of todaySales) {
+      if (methods[sale.paymentMethod] !== undefined) {
+        methods[sale.paymentMethod] += sale.grandTotal;
+      }
+    }
+    const total = Object.values(methods).reduce((a, b) => a + b, 0);
+    return Object.entries(methods)
+      .filter(([, amount]) => amount > 0)
+      .map(([method, amount]) => ({
+        method,
+        amount,
+        percentage: total > 0 ? (amount / total) * 100 : 0,
+      }));
+  },
+});
+
+export const getLowStockDashboard = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 5;
+    const variants = await ctx.db.query("productVariants").collect();
+    const lowStock = variants
+      .filter((vr) => vr.isActive && vr.stockQuantity <= vr.lowStockThreshold)
+      .sort((a, b) => a.stockQuantity - b.stockQuantity)
+      .slice(0, limit);
+
+    return Promise.all(
+      lowStock.map(async (variant) => {
+        const product = await ctx.db.get(variant.productId);
+        const brand = product ? await ctx.db.get(product.brandId) : null;
+        return {
+          variantId: variant._id as unknown as string,
+          productName: product?.name ?? "",
+          brandName: brand?.name ?? "",
+          sizeMl: variant.sizeMl,
+          sku: variant.sku,
+          stockQuantity: variant.stockQuantity,
+          lowStockThreshold: variant.lowStockThreshold,
+          imageUrl: product?.imageUrl ?? null,
+        };
+      })
+    );
+  },
+});
