@@ -9,7 +9,7 @@ import { Select } from "../components/ui/Select";
 import { Modal } from "../components/ui/Modal";
 import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "../components/ui/Table";
 import { StatusBadge } from "../components/ui/Badge";
-import { Plus, RefreshCw, Pencil, Trash2 } from "lucide-react";
+import { Plus, RefreshCw, Pencil, Trash2, ShieldAlert, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../hooks/useAuth";
 import { SkeletonForm, SkeletonTable } from "../components/ui/Skeleton";
@@ -20,6 +20,7 @@ const SETTINGS_TABS = [
   { key: "payments", label: "Payments" },
   { key: "catalogue", label: "Brands & Categories" },
   { key: "users", label: "Users" },
+  { key: "security", label: "Security" },
 ];
 
 export function SettingsPage() {
@@ -59,6 +60,7 @@ export function SettingsPage() {
       {activeTab === "payments" && <PaymentSettings />}
       {activeTab === "catalogue" && <CatalogueSettings />}
       {activeTab === "users" && <UserManagement />}
+      {activeTab === "security" && <SecuritySettings />}
     </AdminLayout>
   );
 }
@@ -559,6 +561,88 @@ function CatalogueSettings() {
               </div>
             ))
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SecuritySettings() {
+  const stats = useQuery(api.auth.getLoginAttemptStats);
+  const clearAttempts = useMutation(api.auth.clearLoginAttempts);
+  const [clearing, setClearing] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+
+  useEffect(() => {
+    if (!stats?.lockedUntil) { setCountdown(0); return; }
+    const tick = () => setCountdown(Math.max(0, stats.lockedUntil! - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [stats?.lockedUntil]);
+
+  const fmt = (ms: number) => {
+    const m = Math.floor(ms / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    return `${m}m ${s}s`;
+  };
+
+  const handleClear = async () => {
+    setClearing(true);
+    try {
+      const r = await clearAttempts({});
+      toast.success(`Cleared ${r.cleared} login records — terminal unlocked`);
+    } finally {
+      setClearing(false);
+    }
+  };
+
+  const isLocked = !!stats?.lockedUntil && countdown > 0;
+
+  return (
+    <div className="max-w-lg space-y-6">
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wider text-[#6B6B6B] mb-3">Brute-Force Protection</p>
+        <div className={`rounded-md border p-4 ${isLocked ? "border-red-200 bg-red-50" : "border-[#E0E0E0] bg-white"}`}>
+          <div className="flex items-center gap-3 mb-3">
+            {isLocked
+              ? <ShieldAlert size={22} className="text-[#DC2626] flex-shrink-0" />
+              : <ShieldCheck size={22} className="text-[#16A34A] flex-shrink-0" />
+            }
+            <div>
+              <p className="text-sm font-semibold text-[#1E1B3A]">
+                {isLocked ? "Terminal Currently Locked" : "Terminal Active"}
+              </p>
+              <p className="text-xs text-[#9B9B9B]">
+                {isLocked ? `Unlocks in ${fmt(countdown)}` : "No active lockout"}
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 text-sm mb-4">
+            <div className="bg-[#F7F7F7] rounded p-3">
+              <p className="text-xs text-[#9B9B9B]">Failed attempts (15 min)</p>
+              <p className="text-xl font-bold font-mono text-[#1E1B3A] mt-0.5">
+                {stats?.failures ?? "—"} <span className="text-sm font-normal text-[#9B9B9B]">/ {stats?.maxFailures}</span>
+              </p>
+            </div>
+            <div className="bg-[#F7F7F7] rounded p-3">
+              <p className="text-xs text-[#9B9B9B]">Successful logins (15 min)</p>
+              <p className="text-xl font-bold font-mono text-[#1E1B3A] mt-0.5">{stats?.successes ?? "—"}</p>
+            </div>
+          </div>
+          <div className="text-xs text-[#9B9B9B] space-y-0.5 mb-4">
+            <p>• Locks after <strong className="text-[#1E1B3A]">{stats?.maxFailures} failed attempts</strong> within {stats?.windowMinutes} minutes</p>
+            <p>• Lockout lasts <strong className="text-[#1E1B3A]">{stats?.lockoutMinutes} minutes</strong> then auto-unlocks</p>
+            <p>• Enforced server-side — bypassing the UI has no effect</p>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={handleClear}
+            loading={clearing}
+            className="w-full text-sm"
+          >
+            Reset Login Attempts & Unlock Terminal
+          </Button>
         </div>
       </div>
     </div>

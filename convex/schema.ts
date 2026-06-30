@@ -222,6 +222,13 @@ export default defineSchema({
     .index("by_category", ["category"])
     .index("by_date", ["date"]),
 
+  // ─── LOGIN ATTEMPTS (brute-force protection) ───
+  loginAttempts: defineTable({
+    timestamp: v.number(),
+    success: v.boolean(),
+  })
+    .index("by_timestamp", ["timestamp"]),
+
   // ─── SETTINGS ───
   settings: defineTable({
     key: v.string(),
