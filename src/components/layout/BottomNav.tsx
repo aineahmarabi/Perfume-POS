@@ -16,11 +16,17 @@ import {
 import { cn } from "../../lib/utils";
 import { useAuth } from "../../hooks/useAuth";
 
-const primaryItems: { label: string; icon: typeof ShoppingCart; path: string; center?: boolean }[] = [
+const adminPrimaryItems: { label: string; icon: typeof ShoppingCart; path: string; center?: boolean }[] = [
   { label: "Dashboard", icon: TrendingUp, path: "/" },
   { label: "Sales", icon: Receipt, path: "/sales" },
   { label: "POS", icon: ShoppingCart, path: "/pos", center: true },
   { label: "Products", icon: Package, path: "/products" },
+];
+
+const cashierPrimaryItems: { label: string; icon: typeof ShoppingCart; path: string; center?: boolean }[] = [
+  { label: "Sales", icon: Receipt, path: "/sales" },
+  { label: "POS", icon: ShoppingCart, path: "/pos", center: true },
+  { label: "Customers", icon: Users, path: "/customers" },
 ];
 
 const moreItems = [
@@ -35,6 +41,7 @@ export function BottomNav() {
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
 
+  const primaryItems = isAdmin ? adminPrimaryItems : cashierPrimaryItems;
   const visibleMore = moreItems.filter((i) => !i.adminOnly || isAdmin);
 
   const handleLogout = () => {
@@ -99,17 +106,19 @@ export function BottomNav() {
           );
         })}
 
-        {/* More button */}
-        <button
-          onClick={() => setShowMore(true)}
-          className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
-            showMore ? "text-[#1E1B3A]" : "text-[#9B9B9B]"
-          )}
-        >
-          <MoreHorizontal size={20} strokeWidth={1.5} />
-          <span>More</span>
-        </button>
+        {/* More button — admin only */}
+        {isAdmin && (
+          <button
+            onClick={() => setShowMore(true)}
+            className={cn(
+              "flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors",
+              showMore ? "text-[#1E1B3A]" : "text-[#9B9B9B]"
+            )}
+          >
+            <MoreHorizontal size={20} strokeWidth={1.5} />
+            <span>More</span>
+          </button>
+        )}
       </nav>
 
       {/* More sheet */}

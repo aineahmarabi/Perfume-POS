@@ -22,15 +22,21 @@ interface NavItem {
   adminOnly?: boolean;
 }
 
-const navItems: NavItem[] = [
+const adminNavItems: NavItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/" },
   { label: "POS", icon: ShoppingCart, path: "/pos" },
   { label: "Products", icon: Package, path: "/products" },
   { label: "Inventory", icon: Boxes, path: "/inventory" },
   { label: "Sales", icon: Receipt, path: "/sales" },
   { label: "Customers", icon: Users, path: "/customers" },
-  { label: "Reports", icon: BarChart3, path: "/reports", adminOnly: true },
-  { label: "Settings", icon: Settings, path: "/settings", adminOnly: true },
+  { label: "Reports", icon: BarChart3, path: "/reports" },
+  { label: "Settings", icon: Settings, path: "/settings" },
+];
+
+const cashierNavItems: NavItem[] = [
+  { label: "Sales", icon: Receipt, path: "/sales" },
+  { label: "POS", icon: ShoppingCart, path: "/pos" },
+  { label: "Customers", icon: Users, path: "/customers" },
 ];
 
 export function Sidebar() {
@@ -44,7 +50,7 @@ export function Sidebar() {
     navigate("/login");
   };
 
-  const visibleItems = navItems.filter((item) => !item.adminOnly || isAdmin);
+  const visibleItems = isAdmin ? adminNavItems : cashierNavItems;
 
   return (
     <aside className="hidden md:flex w-60 bg-[#1E1B3A] fixed left-0 top-0 h-screen flex-col z-30">

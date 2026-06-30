@@ -10,7 +10,7 @@ import { CartPanel } from "../components/pos/CartPanel";
 import { PaymentModal } from "../components/pos/PaymentModal";
 import { ReceiptModal } from "../components/pos/ReceiptModal";
 import { formatDateTime, formatCurrency } from "../lib/utils";
-import { Lock, LayoutGrid, PauseCircle, Clock, ShoppingCart, LayoutDashboard } from "lucide-react";
+import { Lock, LayoutGrid, PauseCircle, Clock, ShoppingCart, LayoutDashboard, Receipt, Users } from "lucide-react";
 import { BottomNav } from "../components/layout/BottomNav";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -145,15 +145,35 @@ export function POSPage() {
           <span className="hidden sm:inline max-w-[100px] truncate">{user?.name}</span>
         </div>
 
-        {/* Dashboard button — admin only, clearly labelled */}
+        {/* Admin: Dashboard link */}
         {user?.role === "admin" && (
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-sm text-white transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-sm text-white transition-colors"
           >
             <LayoutDashboard size={15} />
-            <span className="hidden sm:inline">Dashboard</span>
+            Dashboard
           </button>
+        )}
+
+        {/* Cashier: Sales + Customers links */}
+        {user?.role === "cashier" && (
+          <>
+            <button
+              onClick={() => navigate("/sales")}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-sm text-white transition-colors"
+            >
+              <Receipt size={15} />
+              Sales
+            </button>
+            <button
+              onClick={() => navigate("/customers")}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-sm text-white transition-colors"
+            >
+              <Users size={15} />
+              Customers
+            </button>
+          </>
         )}
 
         {/* Lock */}

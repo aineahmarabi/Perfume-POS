@@ -5,10 +5,24 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { CartItem } from "../../hooks/useCart";
 import { SearchInput } from "../ui/SearchInput";
+import { Skeleton } from "../ui/Skeleton";
 import { useDebounce } from "../../hooks/useDebounce";
 import { formatCurrency } from "../../lib/utils";
 import { cn } from "../../lib/utils";
 import { Package } from "lucide-react";
+
+function ProductRowSkeleton() {
+  return (
+    <div className="flex items-center gap-3 p-2.5 rounded-md border border-[#F0F0F0] bg-white">
+      <Skeleton className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-md" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-2.5 w-20 rounded" />
+        <Skeleton className="h-3.5 w-40 rounded" />
+      </div>
+      <Skeleton className="h-3.5 w-16 flex-shrink-0 rounded" />
+    </div>
+  );
+}
 
 interface ProductGridProps {
   onAddItem: (item: Omit<CartItem, "quantity" | "discount" | "lineTotal">) => void;
@@ -159,8 +173,12 @@ export function ProductGrid({ onAddItem, searchRef }: ProductGridProps) {
       </div>
 
       {/* Product Grid */}
-      <div className="flex-1 overflow-y-auto p-3">
-        {filtered.length === 0 ? (
+      <div className="flex-1 overflow-y-auto p-3 pb-24 md:pb-3">
+        {products === undefined ? (
+          <div className="flex flex-col gap-1.5">
+            {Array.from({ length: 10 }).map((_, i) => <ProductRowSkeleton key={i} />)}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <Package size={32} className="text-[#9B9B9B] mb-2" strokeWidth={1.5} />
             <p className="text-sm text-[#6B6B6B]">No products found.</p>

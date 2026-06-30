@@ -169,7 +169,7 @@ export function CartPanel({
       </div>
 
       {/* Action buttons */}
-      <div className="px-4 pb-3 space-y-2">
+      <div className="px-4 pb-24 md:pb-3 space-y-2">
         <div className="flex gap-2">
           <button
             onClick={() => setShowDiscountModal(true)}
